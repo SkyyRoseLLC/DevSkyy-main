@@ -106,7 +106,7 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Authentication failed",
             headers={"WWW-Authenticate": "Bearer"},
-        )
+        ) from e
 
 
 # Initialize orchestration system
@@ -120,7 +120,7 @@ async def get_orchestration_system():
         logger.error(f"Failed to import orchestration system: {e}")
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Orchestration system not available"
-        )
+        ) from e
 
 
 # Health and Status Endpoints
@@ -195,7 +195,7 @@ async def get_orchestration_health(current_user: dict = Depends(get_current_user
 
     except Exception as e:
         logger.error(f"Health check failed: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Health check failed: {e!s}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Health check failed: {e!s}") from e
 
 
 @router.get("/metrics", response_model=list[MetricsResponse], tags=["Metrics"])
@@ -233,7 +233,7 @@ async def get_all_metrics(current_user: dict = Depends(get_current_user)) -> lis
         logger.error(f"Metrics collection failed: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Metrics collection failed: {e!s}"
-        )
+        ) from e
 
 
 @router.get("/metrics/{partnership_type}", response_model=MetricsResponse, tags=["Metrics"])
@@ -275,7 +275,7 @@ async def get_partnership_metrics(
         logger.error(f"Partnership metrics failed: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Partnership metrics failed: {e!s}"
-        )
+        ) from e
 
 
 # Strategic Decision Engine
@@ -309,7 +309,7 @@ async def make_strategic_decision(
         logger.error(f"Strategic decision failed: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Strategic decision failed: {e!s}"
-        )
+        ) from e
 
 
 # Partnership Management
@@ -381,7 +381,7 @@ async def get_all_partnerships(current_user: dict = Depends(get_current_user)) -
         logger.error(f"Partnership status failed: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Partnership status failed: {e!s}"
-        )
+        ) from e
 
 
 @router.get("/partnerships/{partnership_id}/status", response_model=PartnershipStatus, tags=["Partnerships"])
@@ -406,7 +406,7 @@ async def get_partnership_status(
         logger.error(f"Partnership status failed: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Partnership status failed: {e!s}"
-        )
+        ) from e
 
 
 # System Information
@@ -453,7 +453,7 @@ async def get_system_info(current_user: dict = Depends(get_current_user)) -> dic
 
     except Exception as e:
         logger.error(f"System info failed: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"System info failed: {e!s}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"System info failed: {e!s}") from e
 
 
 # System Status Endpoint
@@ -506,7 +506,7 @@ async def get_system_status(current_user: dict = Depends(get_current_user)) -> d
         logger.error(f"System status check failed: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"System status check failed: {e!s}"
-        )
+        ) from e
 
 
 # Configuration Management
@@ -558,7 +558,7 @@ async def get_system_configuration(current_user: dict = Depends(get_current_user
         logger.error(f"Configuration retrieval failed: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Configuration retrieval failed: {e!s}"
-        )
+        ) from e
 
 
 # Deployment Readiness Check
@@ -629,7 +629,7 @@ async def check_deployment_readiness(current_user: dict = Depends(get_current_us
         logger.error(f"Deployment readiness check failed: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Deployment readiness check failed: {e!s}"
-        )
+        ) from e
 
 
 # API Documentation
@@ -773,4 +773,4 @@ async def get_api_documentation(current_user: dict = Depends(get_current_user)) 
         logger.error(f"API documentation failed: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"API documentation failed: {e!s}"
-        )
+        ) from e

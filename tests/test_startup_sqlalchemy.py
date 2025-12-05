@@ -243,7 +243,7 @@ class TestDevSkyStartup:
 
         with caplog.at_level(logging.INFO), patch(
             "startup_sqlalchemy.init_db", new_callable=AsyncMock
-        ) as mock_init_db, patch("startup_sqlalchemy.db_manager.connect", new_callable=AsyncMock) as mock_connect:
+        ), patch("startup_sqlalchemy.db_manager.connect", new_callable=AsyncMock) as mock_connect:
             mock_connect.return_value = {"status": "connected", "type": "SQLAlchemy"}
 
             await startup.initialize_database()
@@ -259,7 +259,7 @@ class TestDevSkyStartup:
 
         with caplog.at_level(logging.WARNING), patch(
             "startup_sqlalchemy.init_db", new_callable=AsyncMock
-        ) as mock_init_db, patch("startup_sqlalchemy.db_manager.connect", new_callable=AsyncMock) as mock_connect:
+        ), patch("startup_sqlalchemy.db_manager.connect", new_callable=AsyncMock) as mock_connect:
             mock_connect.return_value = {"status": "failed", "error": "Connection timeout"}
 
             await startup.initialize_database()

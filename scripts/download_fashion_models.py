@@ -51,7 +51,7 @@ class FashionModelDownloader:
                 from diffusers import DiffusionPipeline
 
                 # Download diffusion model
-                pipeline = DiffusionPipeline.from_pretrained(
+                DiffusionPipeline.from_pretrained(
                     model_id,
                     cache_dir=self.cache_dir,
                     torch_dtype="auto",
@@ -64,12 +64,12 @@ class FashionModelDownloader:
                 from transformers import AutoModel, AutoTokenizer
 
                 # Download transformer model
-                model = AutoModel.from_pretrained(
+                AutoModel.from_pretrained(
                     model_id,
                     cache_dir=self.cache_dir,
                 )
 
-                tokenizer = AutoTokenizer.from_pretrained(
+                AutoTokenizer.from_pretrained(
                     model_id,
                     cache_dir=self.cache_dir,
                 )

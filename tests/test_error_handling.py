@@ -225,7 +225,7 @@ class TestCircuitBreaker:
         assert cb.name == "test_service"
         assert cb.failure_threshold == 5
         assert cb.recovery_timeout == 60
-        assert cb.expected_exception == Exception
+        assert cb.expected_exception is Exception
         assert cb.state == CircuitBreakerState.CLOSED
         assert cb.failure_count == 0
         assert cb.success_count == 0
@@ -244,7 +244,7 @@ class TestCircuitBreaker:
 
         assert cb.failure_threshold == 3
         assert cb.recovery_timeout == 30
-        assert cb.expected_exception == ValueError
+        assert cb.expected_exception is ValueError
 
     @pytest.mark.asyncio
     async def test_circuit_breaker_success(self):
@@ -836,7 +836,7 @@ class TestErrorHandler:
         handler.error_stats["ValueError"] = 5
         handler.error_stats["TypeError"] = 3
 
-        cb = handler.register_circuit_breaker(name="test_service")
+        handler.register_circuit_breaker(name="test_service")
 
         stats = handler.get_error_stats()
 

@@ -363,7 +363,8 @@ class NotificationManager:
         self.pending_messages[message_id] = notification
 
         # Schedule delivery
-        asyncio.create_task(self._deliver_message(notification))
+        _task = asyncio.create_task(  # noqa: RUF006 - fire and forget task
+        self._deliver_message(notification))
 
         logger.info(f"Notification queued: {message_id} ({channel.value})")
         return message_id

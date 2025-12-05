@@ -335,8 +335,9 @@ class BaseAgent(ABC):
         # Subclasses can override to implement specific resets
 
     async def _apply_known_fix(self, error_signature: str):
-        """Apply a known fix for a specific error"""
+        """Apply a known fix for a specific error."""
         # Subclasses can override to implement specific fixes
+        _ = error_signature  # Base implementation is a no-op
 
     # === ML-Powered Anomaly Detection ===
 

@@ -1854,6 +1854,8 @@ class AgentAssignmentManager:
             "technical_quality_score": 95.5,
             "overall_rating": "excellent",
         }
+
+    async def get_monitoring_status(self) -> dict[str, Any]:
         """Get current status of 24/7 monitoring system."""
         try:
             return {

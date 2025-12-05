@@ -319,7 +319,7 @@ class OpenAIFunctionCallingClient:
         if function_name not in self.functions:
             raise ValueError(f"Function not registered: {function_name}")
 
-        func, schema, tool_config = self.functions[function_name]
+        func, _schema, _tool_config = self.functions[function_name]
 
         # Create tool call request
         request = ToolCallRequest(

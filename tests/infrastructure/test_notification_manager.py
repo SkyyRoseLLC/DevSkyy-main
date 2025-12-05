@@ -10,7 +10,6 @@ Coverage Target: ≥75%
 """
 
 import asyncio
-import time
 from datetime import datetime
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -264,7 +263,7 @@ class TestRateLimiter:
         await limiter.acquire("test_channel")
 
         # Wait for slot should return wait time
-        wait_time = await limiter.wait_for_slot("test_channel")
+        await limiter.wait_for_slot("test_channel")
 
         # Should have waited and now can acquire again
         result = await limiter.acquire("test_channel")
@@ -483,7 +482,8 @@ class TestMessageDelivery:
                 priority=NotificationPriority.NORMAL,
             )
             notification_manager.pending_messages[msg.id] = msg
-            asyncio.create_task(notification_manager._deliver_message(msg))
+            _task = asyncio.create_task(  # noqa: RUF006 - fire and forget task
+        notification_manager._deliver_message(msg))
 
         # Give tasks time to run
         await asyncio.sleep(0.5)

@@ -463,7 +463,8 @@ class MarketingCampaignOrchestrator:
             self.analytics[campaign_id] = analytics
 
             # Start monitoring
-            asyncio.create_task(self._monitor_campaign_performance(campaign_id))
+            _task = asyncio.create_task(  # noqa: RUF006 - fire and forget task
+        self._monitor_campaign_performance(campaign_id))
 
             logger.info(
                 f"🚀 Campaign launched: {campaign.name} " f"(Reach: {total_reach}, Channels: {len(campaign.channels)})"

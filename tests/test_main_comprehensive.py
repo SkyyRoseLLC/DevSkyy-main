@@ -706,7 +706,7 @@ class TestAgentEndpoints:
 
         main._agent_cache.clear()
 
-        with patch("main.PROMETHEUS_AVAILABLE", True), patch("main.AI_PREDICTIONS") as mock_metric:
+        with patch("main.PROMETHEUS_AVAILABLE", True), patch("main.AI_PREDICTIONS"):
             with patch("main.AGENT_MODULES_AVAILABLE", True):
                 with patch("main.SecurityAgent") as mock_agent:
                     mock_agent.return_value = MagicMock()

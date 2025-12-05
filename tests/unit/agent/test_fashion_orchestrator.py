@@ -10,11 +10,8 @@ Truth Protocol Compliance:
 - Rule #10: No-Skip Rule (all errors logged and handled)
 """
 
-import asyncio
 import json
-from datetime import datetime
-from pathlib import Path
-from unittest.mock import AsyncMock, MagicMock, Mock, mock_open, patch
+from unittest.mock import AsyncMock, mock_open, patch
 
 import pytest
 
@@ -27,7 +24,7 @@ from agent.fashion_orchestrator import (
     FashionOrchestrator,
     ProductDescription,
 )
-from agent.unified_orchestrator import ExecutionPriority, Task, TaskStatus
+from agent.unified_orchestrator import ExecutionPriority, Task
 
 
 # =============================================================================
@@ -730,7 +727,7 @@ class TestTaskCreation:
         orchestrator.create_task = AsyncMock(return_value=Task())
 
         # Act
-        task = await orchestrator.create_3d_garment_simulation_task(
+        await orchestrator.create_3d_garment_simulation_task(
             garment_3d_model="garment.glb",
             avatar_3d_model="avatar.glb",
         )
@@ -949,7 +946,7 @@ class TestEdgeCases:
         orchestrator.create_task = AsyncMock(return_value=Task())
 
         # Act
-        task = await orchestrator.create_product_description_task(
+        await orchestrator.create_product_description_task(
             product_name="Test",
             product_type="handbag",
             materials=["leather"],
@@ -968,7 +965,7 @@ class TestEdgeCases:
         orchestrator.create_task = AsyncMock(return_value=Task())
 
         # Act
-        task = await orchestrator.create_3d_asset_task(
+        await orchestrator.create_3d_asset_task(
             asset_type=FashionAssetType.SHOES,
             style_reference="Athletic shoes",
             dimensions=None,
@@ -985,7 +982,7 @@ class TestEdgeCases:
         orchestrator.create_task = AsyncMock(return_value=Task())
 
         # Act
-        task = await orchestrator.create_avatar_task(
+        await orchestrator.create_avatar_task(
             gender="male",
             body_measurements={"height_cm": 180},
             customization=None,

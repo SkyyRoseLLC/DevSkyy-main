@@ -109,7 +109,7 @@ async def build_skyy_rose_theme(theme_request: dict[str, Any]):
             }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 async def generate_skyy_rose_theme_files(theme_dir: Path, theme_name: str, customizations: dict):

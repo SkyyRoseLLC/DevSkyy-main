@@ -299,7 +299,7 @@ def get_auth0_public_key():
         logger.error(f"Failed to get Auth0 public key: {sanitize_for_log(str(e))}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Authentication service unavailable"
-        )
+        ) from e
 
 
 def verify_jwt_token(token: str) -> TokenPayload:
@@ -342,10 +342,10 @@ def verify_jwt_token(token: str) -> TokenPayload:
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication credentials",
             headers={"WWW-Authenticate": "Bearer"},
-        )
+        ) from e
     except Exception as e:
         logger.error(f"Token verification error: {sanitize_for_log(str(e))}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Authentication service error")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Authentication service error") from e
 
 
 # ============================================================================
@@ -388,7 +388,7 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         raise
     except Exception as e:
         logger.error(f"Failed to get user details: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to get user information")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to get user information") from e
 
 
 async def get_current_admin_user(current_user: Auth0User = Depends(get_current_user)) -> Auth0User:
@@ -527,7 +527,7 @@ def verify_devskyy_jwt_token(token: str) -> dict[str, Any]:
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication credentials",
             headers={"WWW-Authenticate": "Bearer"},
-        )
+        ) from e
 
 
 # ============================================================================

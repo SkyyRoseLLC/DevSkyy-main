@@ -21,12 +21,10 @@ Tests the UnifiedMCPOrchestrator class including:
 - Error handling and recovery mechanisms
 """
 
-import asyncio
-import json
 from datetime import datetime, timedelta
-from pathlib import Path
+import json
 from typing import Any
-from unittest.mock import AsyncMock, MagicMock, Mock, mock_open, patch
+from unittest.mock import patch
 from uuid import uuid4
 
 import pytest
@@ -1443,7 +1441,7 @@ class TestMonitoringMetrics:
         health = await orchestrator.get_orchestrator_health()
 
         # Assert
-        for agent_name, agent_health in health["agent_health"].items():
+        for agent_health in health["agent_health"].values():
             assert "capabilities" in agent_health
             assert "metrics" in agent_health
             assert "circuit_breaker" in agent_health

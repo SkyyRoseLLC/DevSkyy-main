@@ -364,10 +364,10 @@ class GDPRManager:
         logs = self.audit_logs
 
         if user_id:
-            logs = [l for l in logs if l.user_id == user_id]
+            logs = [log for log in logs if log.user_id == user_id]
 
         if action:
-            logs = [l for l in logs if l.action == action]
+            logs = [log for log in logs if log.action == action]
 
         return logs[-limit:]
 

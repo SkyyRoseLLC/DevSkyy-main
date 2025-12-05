@@ -423,14 +423,12 @@ async def main():
 
     # Step 2: Optimize prompt with Claude
     current_prompt = "You are a helpful AI assistant."
-    result = await orchestrator.optimize_prompt_with_claude(
+    await orchestrator.optimize_prompt_with_claude(
         agent_id,
         current_prompt,
         top_k_examples=5
     )
 
-    print("Optimized Prompt:")
-    print(result["optimized_prompt"])
 
     # Step 3: Fine-tune OpenAI model (optional)
     # ft_result = await orchestrator.fine_tune_openai(agent_id, top_k_examples=20)

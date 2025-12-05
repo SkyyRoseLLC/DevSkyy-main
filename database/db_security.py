@@ -107,7 +107,7 @@ class SecureConnectionPool:
         """Set up SQLAlchemy event listeners for security monitoring"""
 
         @event.listens_for(self.engine.sync_engine, "connect")
-        def on_connect(dbapi_connection, connection_record):
+        def on_connect(dbapi_connection, _connection_record):
             """Monitor database connections"""
             self.connection_stats["total_connections"] += 1
             self.connection_stats["active_connections"] += 1
@@ -122,7 +122,7 @@ class SecureConnectionPool:
             logger.debug(f"🔌 Database connection established: {id(dbapi_connection)}")
 
         @event.listens_for(self.engine.sync_engine, "close")
-        def on_close(dbapi_connection, connection_record):
+        def on_close(dbapi_connection, _connection_record):
             """Monitor connection closures"""
             self.connection_stats["active_connections"] -= 1
 
@@ -136,7 +136,7 @@ class SecureConnectionPool:
             logger.debug(f"🔌 Database connection closed: {id(dbapi_connection)}")
 
         @event.listens_for(self.engine.sync_engine, "before_cursor_execute")
-        def on_before_execute(conn, cursor, statement, parameters, context, executemany):
+        def on_before_execute(_conn, _cursor, statement, _parameters, _context, _executemany):
             """Monitor SQL queries for security threats"""
             # Record query pattern
             query_type = statement.strip().split()[0].upper() if statement.strip() else "UNKNOWN"

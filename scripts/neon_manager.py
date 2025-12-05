@@ -236,7 +236,7 @@ def main():
 
     command = sys.argv[1]
 
-    if command == "help" or command == "--help" or command == "-h":
+    if command in {"help", "--help", "-h"}:
         print_help()
         return
 

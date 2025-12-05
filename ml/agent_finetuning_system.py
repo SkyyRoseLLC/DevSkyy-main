@@ -473,7 +473,8 @@ class AgentFinetuningSystem:
         self.jobs[job_id] = job
 
         # Start training asynchronously
-        asyncio.create_task(self._execute_finetuning_job(job, dataset))
+        _task = asyncio.create_task(  # noqa: RUF006 - fire and forget task
+        self._execute_finetuning_job(job, dataset))
 
         logger.info(f"✅ Created finetuning job: {job_id}")
         return job
@@ -597,7 +598,7 @@ class AgentFinetuningSystem:
                 1 for job in self.jobs.values()
                 if job.status == FinetuningStatus.FAILED
             ),
-            "categories_with_data": [cat.value for cat in self.datasets.keys()],
+            "categories_with_data": [cat.value for cat in self.datasets],
             "total_cost_usd": sum(job.cost_usd for job in self.jobs.values())
         }
 

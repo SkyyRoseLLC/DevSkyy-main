@@ -242,7 +242,8 @@ class IncidentResponseSystem:
 
             # Execute response plans
             for plan in triggered_plans:
-                asyncio.create_task(self._execute_response_plan(incident, plan))
+                _task = asyncio.create_task(  # noqa: RUF006 - fire and forget task
+        self._execute_response_plan(incident, plan))
 
         except Exception as e:
             enterprise_logger.error(f"Error handling alert: {e}", category=LogCategory.SYSTEM, error=e)
@@ -330,11 +331,13 @@ class IncidentResponseSystem:
 
             # Schedule escalation if needed
             if plan.escalation_time > 0:
-                asyncio.create_task(self._schedule_escalation(incident, plan.escalation_time))
+                _task = asyncio.create_task(  # noqa: RUF006 - fire and forget task
+        self._schedule_escalation(incident, plan.escalation_time))
 
             # Auto-resolve if configured
             if plan.auto_resolve:
-                asyncio.create_task(self._schedule_auto_resolve(incident, 300))  # 5 minutes
+                _task = asyncio.create_task(  # noqa: RUF006 - fire and forget task
+        self._schedule_auto_resolve(incident, 300))  # 5 minutes
 
         except Exception as e:
             enterprise_logger.error(

@@ -294,7 +294,7 @@ async def upload_single_image(
 
     except Exception as e:
         logger.error(f"Single image upload failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/upload/batch-images")
@@ -409,7 +409,7 @@ async def upload_batch_images(
 
     except Exception as e:
         logger.error(f"Batch upload failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/upload/zip-archive")
@@ -536,7 +536,7 @@ async def upload_zip_archive(
 
     except Exception as e:
         logger.error(f"ZIP archive upload failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.get("/status/uploads")
@@ -590,7 +590,7 @@ async def get_upload_status():
 
     except Exception as e:
         logger.error(f"Failed to get upload status: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/process/category/{category}")
@@ -634,7 +634,7 @@ async def process_category(
 
     except Exception as e:
         logger.error(f"Failed to initiate category processing: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================
@@ -674,7 +674,7 @@ async def preview_bulk_operation(operation_data: dict[str, Any] = Body(...)):
 
     except Exception as e:
         logger.error(f"Failed to generate bulk operation preview: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/bulk/category-update")
@@ -745,7 +745,7 @@ async def bulk_category_update(background_tasks: BackgroundTasks, update_data: B
 
     except Exception as e:
         logger.error(f"❌ Bulk category update failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/bulk/caption-update")
@@ -809,7 +809,7 @@ async def bulk_caption_update(background_tasks: BackgroundTasks, update_data: Bu
 
     except Exception as e:
         logger.error(f"❌ Bulk caption update failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/bulk/tag-update")
@@ -875,7 +875,7 @@ async def bulk_tag_update(background_tasks: BackgroundTasks, update_data: BulkTa
 
     except Exception as e:
         logger.error(f"❌ Bulk tag update failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/bulk/quality-update")
@@ -937,7 +937,7 @@ async def bulk_quality_update(background_tasks: BackgroundTasks, update_data: Bu
 
     except Exception as e:
         logger.error(f"❌ Bulk quality update failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/bulk/metadata-update")
@@ -1000,7 +1000,7 @@ async def bulk_metadata_update(background_tasks: BackgroundTasks, update_data: B
 
     except Exception as e:
         logger.error(f"❌ Bulk metadata update failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.get("/bulk/operations/{operation_id}")
@@ -1024,7 +1024,7 @@ async def get_bulk_operation_status(operation_id: str):
 
     except Exception as e:
         logger.error(f"Failed to get bulk operation status: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/bulk/undo/{operation_id}")
@@ -1069,7 +1069,7 @@ async def undo_bulk_operation(operation_id: str, background_tasks: BackgroundTas
 
     except Exception as e:
         logger.error(f"❌ Bulk undo failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.get("/bulk/operations")
@@ -1107,7 +1107,7 @@ async def list_bulk_operations():
 
     except Exception as e:
         logger.error(f"Failed to list bulk operations: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # Background task functions

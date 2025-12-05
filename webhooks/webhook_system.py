@@ -342,7 +342,8 @@ class WebhookManager:
                 )
 
                 # Schedule retry
-                asyncio.create_task(asyncio.sleep(backoff_seconds))
+                _task = asyncio.create_task(  # noqa: RUF006 - fire and forget task
+        asyncio.sleep(backoff_seconds))
                 await self._deliver_webhook(subscription, payload, attempt + 1)
             else:
                 delivery.status = DeliveryStatus.PERMANENTLY_FAILED

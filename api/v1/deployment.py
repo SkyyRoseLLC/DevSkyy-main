@@ -181,7 +181,7 @@ async def submit_job(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to submit job: {e!s}"
-        )
+        ) from e
 
 
 @router.get(
@@ -235,7 +235,7 @@ async def list_jobs(
     orchestrator = get_deployment_orchestrator()
 
     jobs = []
-    for job_id, job in orchestrator.jobs.items():
+    for job in orchestrator.jobs.values():
         if category and job.category != category:
             continue
 
@@ -308,7 +308,7 @@ async def validate_job(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to validate job: {e!s}"
-        )
+        ) from e
 
 
 @router.get(

@@ -23,7 +23,7 @@ from monitoring.incident_response import (
 @pytest.fixture
 def incident_system():
     """Create fresh incident response system for each test."""
-    with patch("monitoring.incident_response.metrics_collector") as mock_collector:
+    with patch("monitoring.incident_response.metrics_collector"):
         system = IncidentResponseSystem()
         return system
 
@@ -238,7 +238,7 @@ class TestAlertHandling:
         incident_system.handle_alert(sample_alert_high)
         assert len(incident_system.incidents) == 1
 
-        incident = list(incident_system.incidents.values())[0]
+        incident = next(iter(incident_system.incidents.values()))
         assert incident.status == IncidentStatus.OPEN
         assert incident.severity == AlertSeverity.HIGH
         assert len(incident.alerts) == 1
@@ -264,7 +264,7 @@ class TestAlertHandling:
         incident_system.handle_alert(sample_alert_critical)
         assert len(incident_system.incidents) == 1
 
-        incident = list(incident_system.incidents.values())[0]
+        incident = next(iter(incident_system.incidents.values()))
         assert incident.severity == AlertSeverity.CRITICAL
         assert "high_error_rate_plan" in incident.tags
 
@@ -273,7 +273,7 @@ class TestAlertHandling:
         # First alert
         incident_system.handle_alert(sample_alert_high)
         assert len(incident_system.incidents) == 1
-        incident_id = list(incident_system.incidents.keys())[0]
+        incident_id = next(iter(incident_system.incidents.keys()))
 
         # Second alert (same rule) - use LOW severity to test max()
         alert2 = Alert(
@@ -522,7 +522,7 @@ class TestResponseActionExecution:
         result = await incident_system._execute_response_action(incident, response)
         assert result is True
         # Active responses should be cleared after execution
-        assert len([k for k in incident_system.active_responses.keys() if incident.id in k]) == 0
+        assert len([k for k in incident_system.active_responses if incident.id in k]) == 0
 
 
 class TestConditionEvaluation:
@@ -748,8 +748,8 @@ class TestSystemStatus:
         plans_high = [incident_system.response_plans["high_response_time_plan"]]
         plans_critical = [incident_system.response_plans["high_error_rate_plan"]]
 
-        incident1 = incident_system._create_or_update_incident(sample_alert_high, plans_high)
-        incident2 = incident_system._create_or_update_incident(sample_alert_critical, plans_critical)
+        incident_system._create_or_update_incident(sample_alert_high, plans_high)
+        incident_system._create_or_update_incident(sample_alert_critical, plans_critical)
 
         status = incident_system.get_system_status()
 
@@ -765,7 +765,7 @@ class TestSystemStatus:
         plans_critical = [incident_system.response_plans["high_error_rate_plan"]]
 
         incident1 = incident_system._create_or_update_incident(sample_alert_high, plans_high)
-        incident2 = incident_system._create_or_update_incident(sample_alert_critical, plans_critical)
+        incident_system._create_or_update_incident(sample_alert_critical, plans_critical)
 
         # Resolve one incident
         incident_system.resolve_incident(incident1.id, "Resolved")
@@ -864,7 +864,7 @@ class TestIntegrationScenarios:
         incident_system.handle_alert(sample_alert_high)
         assert len(incident_system.incidents) == 1
 
-        incident = list(incident_system.incidents.values())[0]
+        incident = next(iter(incident_system.incidents.values()))
         assert incident.status == IncidentStatus.OPEN
 
         # 2. Execute response plan

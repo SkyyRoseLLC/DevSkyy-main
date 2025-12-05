@@ -450,21 +450,17 @@ async def demo_mcp_llamaindex():
         await orchestrator.sync_training_data_to_vector_store(agent_id)
 
         # Hybrid retrieval: SQL + Vector search
-        examples = await orchestrator.hybrid_retrieve_best_examples(
+        await orchestrator.hybrid_retrieve_best_examples(
             agent_id,
             query="high quality coding examples",
             min_score=0.8,
             top_k=10
         )
 
-        print(f"Retrieved {len(examples)} examples via hybrid search")
 
         # Optimize prompt with Claude
-        result = await orchestrator.optimize_prompt_with_mcp_rag(agent_id, top_k_examples=5)
+        await orchestrator.optimize_prompt_with_mcp_rag(agent_id, top_k_examples=5)
 
-        print(f"Optimized prompt for agent {result['agent_name']}")
-        print(f"Method: {result['method']}")
-        print(f"New prompt: {result['optimized_prompt'][:200]}...")
 
         await orchestrator.close()
 

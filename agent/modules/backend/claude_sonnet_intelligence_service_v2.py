@@ -459,7 +459,8 @@ Brand Voice: Sophisticated, aspirational, confident, exclusive, refined."""
 def create_claude_service_v2() -> ClaudeSonnetIntelligenceServiceV2:
     """Create and return Claude Sonnet Intelligence Service V2 instance."""
     service = ClaudeSonnetIntelligenceServiceV2()
-    asyncio.create_task(service.initialize())
+    _task = asyncio.create_task(  # noqa: RUF006 - fire and forget task
+        service.initialize())
     return service
 
 

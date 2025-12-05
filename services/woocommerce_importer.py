@@ -201,7 +201,7 @@ class WooCommerceImporterService:
 
         except Exception as e:
             logger.exception("Failed to fetch products from Google Sheets")
-            raise GoogleSheetsError(f"Sheet read failed: {e!s}")
+            raise GoogleSheetsError(f"Sheet read failed: {e!s}") from e
 
     async def create_woocommerce_product(self, product: ProductData) -> ProductImportResult:
         """

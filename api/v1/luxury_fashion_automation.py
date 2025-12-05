@@ -361,7 +361,7 @@ async def upload_and_process_asset(
 
     except Exception as e:
         logger.error(f"Asset upload error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/assets/{asset_id}", tags=["Assets"])
@@ -539,7 +539,7 @@ async def generate_virtual_tryon(request: VirtualTryOnRequestModel, background_t
 
     except Exception as e:
         logger.error(f"Virtual try-on error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/tryon/models", tags=["Virtual Try-On"])
@@ -661,7 +661,7 @@ async def generate_visual_content(request: VisualContentRequest, background_task
 
     except Exception as e:
         logger.error(f"Visual content generation error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/visual-content/batch-generate", tags=["Visual Content"])
@@ -720,7 +720,7 @@ async def batch_generate_visual_content(requests: list[VisualContentRequest]):
 
     except Exception as e:
         logger.error(f"Batch generation error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/visual-content/status", tags=["Visual Content"])
@@ -769,7 +769,7 @@ async def sync_inventory(request: InventorySyncRequest):
 
     except Exception as e:
         logger.error(f"Inventory sync error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/finance/transactions/record", tags=["Finance & Inventory"])
@@ -822,7 +822,7 @@ async def record_transaction(
 
     except Exception as e:
         logger.error(f"Transaction recording error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/finance/forecast/{item_id}", tags=["Finance & Inventory"])
@@ -874,7 +874,7 @@ async def get_demand_forecast(item_id: str, forecast_period_days: int = 30):
 
     except Exception as e:
         logger.error(f"Demand forecasting error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/finance/reports/financial", tags=["Finance & Inventory"])
@@ -909,7 +909,7 @@ async def generate_financial_report(start_date: datetime, end_date: datetime):
 
     except Exception as e:
         logger.error(f"Report generation error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/finance/status", tags=["Finance & Inventory"])
@@ -979,7 +979,7 @@ async def create_campaign(request: CampaignRequest):
 
     except Exception as e:
         logger.error(f"Campaign creation error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/marketing/campaigns/{campaign_id}/launch", tags=["Marketing"])
@@ -1002,7 +1002,7 @@ async def launch_campaign(campaign_id: str):
 
     except Exception as e:
         logger.error(f"Campaign launch error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/marketing/campaigns/{campaign_id}/complete", tags=["Marketing"])
@@ -1030,7 +1030,7 @@ async def complete_campaign(campaign_id: str):
 
     except Exception as e:
         logger.error(f"Campaign completion error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/marketing/segments/create", tags=["Marketing"])
@@ -1071,7 +1071,7 @@ async def create_segment(segment_data: dict[str, Any]):
 
     except Exception as e:
         logger.error(f"Segment creation error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/marketing/status", tags=["Marketing"])
@@ -1158,7 +1158,7 @@ async def generate_code(request: CodeGenerationRequest):
 
     except Exception as e:
         logger.error(f"Code generation error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/code/recover", tags=["Code Development"])
@@ -1213,7 +1213,7 @@ async def recover_code(request: CodeRecoveryRequestModel):
 
     except Exception as e:
         logger.error(f"Code recovery error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/code/status", tags=["Code Development"])
@@ -1282,7 +1282,7 @@ async def create_workflow(request: WorkflowExecutionRequest):
 
     except Exception as e:
         logger.error(f"Workflow creation error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/workflows/{workflow_id}/execute", tags=["Workflows"])
@@ -1330,18 +1330,18 @@ async def get_workflow_status(workflow_id: str):
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Workflow engine not available")
 
     try:
-        status = workflow_engine.get_workflow_status(workflow_id)
+        workflow_status = workflow_engine.get_workflow_status(workflow_id)
 
-        if "error" in status:
-            raise HTTPException(status_code=404, detail=status["error"])
+        if "error" in workflow_status:
+            raise HTTPException(status_code=404, detail=workflow_status["error"])
 
-        return status
+        return workflow_status
 
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Workflow status error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/workflows/status", tags=["Workflows"])

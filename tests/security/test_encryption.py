@@ -15,7 +15,12 @@ import pytest
 
 # Import encryption module
 try:
-    from security.encryption import EncryptionService, decrypt_data, encrypt_data, generate_encryption_key
+    from security.encryption import (
+        EncryptionService,
+        decrypt_data,  # noqa: F401 - available for test usage
+        encrypt_data,  # noqa: F401 - available for test usage
+        generate_encryption_key,
+    )
 
     ENCRYPTION_AVAILABLE = True
 except ImportError:

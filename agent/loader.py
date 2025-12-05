@@ -152,15 +152,15 @@ class AgentConfigLoader:
             with open(config_path, "r", encoding="utf-8") as f:
                 config_data = json.load(f)
         except json.JSONDecodeError as e:
-            raise ConfigValidationError(f"Invalid JSON in {config_path}: {e!s}")
+            raise ConfigValidationError(f"Invalid JSON in {config_path}: {e!s}") from e
         except OSError as e:
-            raise LoaderError(f"Error reading config file {config_path}: {e!s}")
+            raise LoaderError(f"Error reading config file {config_path}: {e!s}") from e
 
         # Validate using Pydantic
         try:
             config = AgentConfig(**config_data)
         except ValidationError as e:
-            raise ConfigValidationError(f"Configuration validation failed for {agent_id}: {e!s}")
+            raise ConfigValidationError(f"Configuration validation failed for {agent_id}: {e!s}") from e
 
         # Update cache
         self._cache[agent_id] = config

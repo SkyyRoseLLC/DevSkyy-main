@@ -125,7 +125,7 @@ async def generate_code(request: CodeGenerationRequest, current_user: dict = Dep
         raise
     except Exception as e:
         logger.error(f"Code generation failed: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)) from e
 
 
 @router.post("/codex/complete", tags=["codex"])
@@ -164,7 +164,7 @@ async def complete_code(request: CodeCompletionRequest, current_user: dict = Dep
         raise
     except Exception as e:
         logger.error(f"Code completion failed: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)) from e
 
 
 @router.post("/codex/explain", tags=["codex"])
@@ -198,7 +198,7 @@ async def explain_code(request: CodeExplanationRequest, current_user: dict = Dep
         raise
     except Exception as e:
         logger.error(f"Code explanation failed: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)) from e
 
 
 @router.post("/codex/review", tags=["codex"])
@@ -236,7 +236,7 @@ async def review_code(request: CodeReviewRequest, current_user: dict = Depends(g
         raise
     except Exception as e:
         logger.error(f"Code review failed: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)) from e
 
 
 @router.post("/codex/document", tags=["codex"])
@@ -274,7 +274,7 @@ async def generate_documentation(request: CodeDocumentationRequest, current_user
         raise
     except Exception as e:
         logger.error(f"Documentation generation failed: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)) from e
 
 
 @router.post("/codex/optimize", tags=["codex"])
@@ -311,7 +311,7 @@ async def optimize_code(request: CodeOptimizationRequest, current_user: dict = D
         raise
     except Exception as e:
         logger.error(f"Code optimization failed: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)) from e
 
 
 @router.get("/codex/models", tags=["codex"])
@@ -420,7 +420,7 @@ async def heal_code(request: CodeHealingRequest, current_user: dict = Depends(ge
         raise
     except Exception as e:
         logger.error(f"Code healing failed: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)) from e
 
 
 @router.get("/codex/healing/stats", tags=["codex-orchestration"])

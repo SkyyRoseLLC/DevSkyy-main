@@ -21,21 +21,18 @@ Per Truth Protocol:
 """
 
 import asyncio
-from datetime import datetime
-import json
+import contextlib
 import logging
 from pathlib import Path
 import tempfile
 import time
 from typing import Any
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
 from agent.fashion_orchestrator import (
     FashionAssetType,
-    AIModelProvider,
-    ProductDescription,
     FashionOrchestrator,
 )
 
@@ -659,13 +656,11 @@ class TestCompleteE2EWorkflow:
 
         orchestrator.enable_error_ledger()
 
-        try:
+        with contextlib.suppress(Exception):
             await orchestrator.publish_to_wordpress({
                 "title": "Test Product",
                 "content": "Test content",
             })
-        except Exception:
-            pass
 
         error_ledger = orchestrator.get_error_ledger()
 

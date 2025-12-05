@@ -501,7 +501,7 @@ class TestVectorDatabase:
 
         db = VectorDatabase()
         filters = {"source": "test.pdf"}
-        results = db.search("query", top_k=5, filters=filters)
+        db.search("query", top_k=5, filters=filters)
 
         collection.query.assert_called_once()
         call_args = collection.query.call_args
@@ -789,7 +789,7 @@ class TestRAGService:
 
         service = RAGService(vector_db=vector_db, doc_processor=doc_processor)
         custom_metadata = {"author": "test", "category": "demo"}
-        stats = await service.ingest_text("Text", metadata=custom_metadata)
+        await service.ingest_text("Text", metadata=custom_metadata)
 
         # Verify metadata was added to chunks
         added_chunks = vector_db.add_documents.call_args[0][0]
@@ -838,7 +838,7 @@ class TestRAGService:
 
         service = RAGService(vector_db=vector_db, doc_processor=Mock())
         filters = {"source": "test.pdf"}
-        results = await service.search("query", filters=filters)
+        await service.search("query", filters=filters)
 
         vector_db.search.assert_called_once()
         call_args = vector_db.search.call_args
@@ -943,7 +943,7 @@ class TestRAGService:
         service.anthropic = anthropic_client
 
         custom_prompt = "You are a helpful assistant."
-        result = await service.query("Question?", system_prompt=custom_prompt)
+        await service.query("Question?", system_prompt=custom_prompt)
 
         # Verify custom prompt was used
         call_args = anthropic_client.messages.create.call_args
@@ -1103,4 +1103,4 @@ class TestIntegration:
 
         # Should produce same chunks for same input
         assert len(chunks1) == len(chunks2)
-        assert all(c1["content"] == c2["content"] for c1, c2 in zip(chunks1, chunks2))
+        assert all(c1["content"] == c2["content"] for c1, c2 in zip(chunks1, chunks2, strict=False))

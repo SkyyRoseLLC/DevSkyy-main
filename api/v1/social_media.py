@@ -184,7 +184,7 @@ async def create_social_post(
 
     except Exception as e:
         logger.exception("Failed to create social post")
-        raise HTTPException(status_code=500, detail=f"Failed to create social post: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to create social post: {e!s}") from e
 
 
 @router.get("/posts/{post_id}")
@@ -241,7 +241,7 @@ async def get_social_post(
         raise
     except Exception as e:
         logger.exception(f"Failed to retrieve post {post_id}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/schedule")
@@ -271,7 +271,7 @@ async def schedule_social_posts(
                 task={
                     "action": "optimize_schedule",
                     "posts_count": len(request.posts),
-                    "platforms": list(set(p for post in request.posts for p in post.platforms)),
+                    "platforms": list({p for post in request.posts for p in post.platforms}),
                     "date_range_start": request.date_range_start,
                     "date_range_end": request.date_range_end,
                     "frequency": request.frequency,
@@ -285,7 +285,7 @@ async def schedule_social_posts(
 
         # Create scheduled posts
         scheduled_posts = []
-        for i, (post_data, scheduled_time) in enumerate(zip(request.posts, optimal_times)):
+        for i, (post_data, scheduled_time) in enumerate(zip(request.posts, optimal_times, strict=False)):
             post_data.scheduled_for = scheduled_time
             # Create post (will be scheduled)
             # This would call create_social_post internally
@@ -304,7 +304,7 @@ async def schedule_social_posts(
 
     except Exception as e:
         logger.exception("Failed to create schedule")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/analytics")
@@ -387,7 +387,7 @@ async def get_social_analytics(
 
     except Exception as e:
         logger.exception("Failed to retrieve analytics")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/platforms/{platform}/connect")
@@ -463,7 +463,7 @@ async def connect_social_platform(
         raise
     except Exception as e:
         logger.exception(f"Failed to connect platform {platform}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================

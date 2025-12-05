@@ -190,9 +190,8 @@ class RateLimiter:
                 return False, f"Rate limit exceeded: {self.max_per_minute} requests per minute"
 
             # Check consequential rate if applicable
-            if is_consequential:
-                if len(self.consequential_requests) >= self.max_consequential_per_hour:
-                    return False, f"Consequential operation limit exceeded: {self.max_consequential_per_hour} per hour"
+            if is_consequential and len(self.consequential_requests) >= self.max_consequential_per_hour:
+                return False, f"Consequential operation limit exceeded: {self.max_consequential_per_hour} per hour"
 
             # Record request
             self.requests.append(now)

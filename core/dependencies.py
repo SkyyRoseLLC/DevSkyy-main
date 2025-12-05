@@ -135,7 +135,7 @@ def require_role(minimum_role: Role) -> Callable:
         try:
             # Parse user's role from token
             user_role = Role(current_user.role)
-        except ValueError:
+        except ValueError as exc:
             # Invalid role in token
             logger.error(
                 f"Invalid role in token: {current_user.role} for user {current_user.user_id}"
@@ -143,7 +143,7 @@ def require_role(minimum_role: Role) -> Callable:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Invalid role: {current_user.role}",
-            )
+            ) from exc
 
         # Check if user's role is high enough
         if not is_role_higher_or_equal(user_role, minimum_role):
@@ -213,7 +213,7 @@ def require_permission(required_permission: str) -> Callable:
         try:
             # Parse user's role from token
             user_role = Role(current_user.role)
-        except ValueError:
+        except ValueError as exc:
             # Invalid role in token
             logger.error(
                 f"Invalid role in token: {current_user.role} for user {current_user.user_id}"
@@ -221,7 +221,7 @@ def require_permission(required_permission: str) -> Callable:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Invalid role: {current_user.role}",
-            )
+            ) from exc
 
         # Check if user's role has the required permission
         if not has_permission(user_role, required_permission):

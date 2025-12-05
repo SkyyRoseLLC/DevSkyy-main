@@ -22,17 +22,13 @@ Settings.embed_model = HuggingFaceEmbedding(
 async def demo_local_rag():
     """Demo: RAG with local embeddings on README.md"""
 
-    print("Loading documents...")
     documents = SimpleDirectoryReader(
         input_files=["./README.md"]
     ).load_data()
 
-    print(f"Loaded {len(documents)} documents")
 
-    print("Building vector index with local embeddings...")
     index = VectorStoreIndex.from_documents(documents)
 
-    print("Index built! Ready to query.\n")
 
     # Create query engine
     query_engine = index.as_query_engine()
@@ -45,15 +41,9 @@ async def demo_local_rag():
     ]
 
     for query in queries:
-        print(f"\n{'='*60}")
-        print(f"Query: {query}")
-        print(f"{'='*60}")
 
-        response = query_engine.query(query)
-        print(f"Answer: {response}\n")
-        print(f"Sources: {[node.node.metadata.get('file_name') for node in response.source_nodes]}")
+        query_engine.query(query)
 
 if __name__ == "__main__":
     # Download the embedding model first
-    print("Downloading local embedding model (one-time setup)...")
     asyncio.run(demo_local_rag())

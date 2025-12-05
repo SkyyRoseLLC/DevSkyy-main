@@ -423,9 +423,9 @@ class ParallelFunctionCaller:
         import inspect
         import time
 
-        start_time = time.time()
+        time.time()
 
-        func, schema, tool_config = available_functions[func_name]
+        func, _schema, tool_config = available_functions[func_name]
 
         # Create request
         request = ToolCallRequest(

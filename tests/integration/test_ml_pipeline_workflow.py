@@ -26,13 +26,16 @@ import json
 import logging
 from pathlib import Path
 import tempfile
-import time
 from typing import Any
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import patch
 
 import numpy as np
 import pytest
 
+from ml.agent_deployment_system import (
+    DeploymentEnvironment,
+    DeploymentStrategy,
+)
 from ml.agent_finetuning_system import (
     AgentCategory,
     AgentPerformanceSnapshot,
@@ -41,12 +44,7 @@ from ml.agent_finetuning_system import (
     FinetuningProvider,
     FinetuningStatus,
 )
-from ml.model_registry import ModelRegistry, ModelVersion, ModelMetadata
-from ml.agent_deployment_system import (
-    DeploymentEnvironment,
-    DeploymentStrategy,
-    ModelDeployment,
-)
+from ml.model_registry import ModelMetadata, ModelRegistry
 
 
 logger = logging.getLogger(__name__)
@@ -156,7 +154,7 @@ class TestDataCollectionAndPreparation:
         category_counts = Counter(s.category for s in sample_training_data)
 
         assert len(category_counts) >= 1
-        for category, count in category_counts.items():
+        for count in category_counts.values():
             assert count > 0
 
     def test_augment_training_data(self, sample_training_data: list[AgentPerformanceSnapshot]):
@@ -247,7 +245,7 @@ class TestModelTraining:
 
         with patch.object(finetuning_system, "get_job_status", side_effect=mock_get_job_status):
             for _ in range(4):
-                status = await finetuning_system.get_job_status(job.job_id)
+                await finetuning_system.get_job_status(job.job_id)
                 await asyncio.sleep(0.1)
 
         assert len(progress_updates) == 4
@@ -325,7 +323,7 @@ class TestModelTraining:
         """Test hyperparameter tuning for optimal performance."""
         from ml.agent_finetuning_system import AgentFinetuningSystem
 
-        finetuning_system = AgentFinetuningSystem()
+        AgentFinetuningSystem()
 
         hyperparameter_configs = [
             {"n_epochs": 2, "learning_rate_multiplier": 0.05},

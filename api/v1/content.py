@@ -182,7 +182,7 @@ async def publish_content(
 
     except Exception as e:
         logger.exception("Content publishing failed")
-        raise HTTPException(status_code=500, detail=f"Publishing failed: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Publishing failed: {e!s}") from e
 
 
 @router.post("/publish-batch", response_model=dict)
@@ -269,7 +269,7 @@ async def publish_content_batch(
 
     except Exception as e:
         logger.exception("Batch publishing failed")
-        raise HTTPException(status_code=500, detail=f"Batch publishing failed: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Batch publishing failed: {e!s}") from e
 
 
 @router.post("/schedule", response_model=ScheduledPublishResponse)
@@ -322,7 +322,7 @@ async def schedule_content_publishing(
 
     except Exception as e:
         logger.exception("Scheduling failed")
-        raise HTTPException(status_code=500, detail=f"Scheduling failed: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Scheduling failed: {e!s}") from e
 
 
 @router.post("/categorize", response_model=dict)
@@ -409,7 +409,7 @@ async def categorize_wordpress_posts(
 
     except Exception as e:
         logger.exception("WordPress categorization failed")
-        raise HTTPException(status_code=500, detail=f"Categorization failed: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Categorization failed: {e!s}") from e
 
 
 @router.get("/categories", response_model=dict)

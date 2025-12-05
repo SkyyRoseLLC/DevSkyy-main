@@ -66,7 +66,7 @@ async def list_models(current_user: TokenData = Depends(get_current_active_user)
         return {"models": models, "total": len(models)}
     except Exception as e:
         logger.error(f"Failed to list models: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/registry/models/{model_name}/versions")
@@ -76,7 +76,7 @@ async def list_model_versions(model_name: str, current_user: TokenData = Depends
         versions = model_registry.list_versions(model_name)
         return {"model_name": model_name, "versions": versions}
     except Exception as e:
-        raise HTTPException(status_code=404, detail=f"Model not found: {model_name}. Error: {e!s}")
+        raise HTTPException(status_code=404, detail=f"Model not found: {model_name}. Error: {e!s}") from e
 
 
 @router.get("/registry/models/{model_name}/{version}")
@@ -89,10 +89,10 @@ async def get_model_metadata(
     try:
         metadata = model_registry.get_metadata(model_name, version)
         return metadata.to_dict()
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail=f"Metadata not found for {model_name} v{version}")
+    except FileNotFoundError as fnf_err:
+        raise HTTPException(status_code=404, detail=f"Metadata not found for {model_name} v{version}") from fnf_err
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/registry/models/{model_name}/{version}/promote")
@@ -113,7 +113,7 @@ async def promote_model(
         }
     except Exception as e:
         logger.error(f"Failed to promote model: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/registry/stats")
@@ -125,7 +125,7 @@ async def get_registry_stats(
         stats = model_registry.get_registry_stats()
         return stats
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/registry/models/{model_name}/compare")
@@ -140,7 +140,7 @@ async def compare_models(
         comparison = model_registry.compare_models(model_name, version1, version2)
         return comparison
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================
@@ -155,7 +155,7 @@ async def get_cache_stats(current_user: TokenData = Depends(require_developer)):
         stats = redis_cache.stats()
         return stats
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.delete("/cache/clear")
@@ -165,7 +165,7 @@ async def clear_cache(current_user: TokenData = Depends(require_developer)):
         redis_cache.clear()
         return {"status": "success", "message": "Cache cleared"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================
@@ -188,13 +188,13 @@ async def explain_prediction(request: ExplainRequest, current_user: TokenData = 
             feature_names=request.feature_names if request.feature_names else None,
         )
         return explanation
-    except ImportError:
-        raise HTTPException(status_code=501, detail="SHAP not installed. Install with: pip install shap")
+    except ImportError as imp_err:
+        raise HTTPException(status_code=501, detail="SHAP not installed. Install with: pip install shap") from imp_err
     except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=404, detail=str(e)) from e
     except Exception as e:
         logger.error(f"Explanation failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/health")

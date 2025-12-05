@@ -63,7 +63,7 @@ class EncryptionSettings:
                 if len(self.MASTER_KEY) != 32:
                     raise ValueError("Master key must be 256 bits (32 bytes)")
             except Exception as e:
-                raise ValueError(f"Invalid ENCRYPTION_MASTER_KEY: {e!s}")
+                raise ValueError(f"Invalid ENCRYPTION_MASTER_KEY: {e!s}") from e
 
 
 settings = EncryptionSettings()
@@ -142,7 +142,7 @@ def encrypt_field(plaintext: str, master_key: bytes | None = None) -> str:
 
     except Exception as e:
         logger.error(f"Encryption failed: {e!s}")
-        raise RuntimeError(f"Encryption error: {e!s}")
+        raise RuntimeError(f"Encryption error: {e!s}") from e
 
 
 def decrypt_field(
@@ -187,7 +187,7 @@ def decrypt_field(
 
     except Exception as e:
         logger.error(f"Decryption failed: {e!s}")
-        raise ValueError("Decryption failed - data may be corrupted or tampered with")
+        raise ValueError("Decryption failed - data may be corrupted or tampered with") from e
 
 
 def encrypt_dict(data: dict, fields: list) -> dict:

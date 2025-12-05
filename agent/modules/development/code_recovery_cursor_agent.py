@@ -505,7 +505,7 @@ class CodeRecoveryCursorAgent:
             raise HTTPException(
                 status_code=503,
                 detail=f"Code generation with Codex failed: {e!s}. Check OPENAI_API_KEY environment variable.",
-            )
+            ) from e
 
     async def _generate_with_claude(self, request: CodeGenerationRequest) -> str:
         """
@@ -541,7 +541,7 @@ class CodeRecoveryCursorAgent:
             raise HTTPException(
                 status_code=503,
                 detail=f"Code generation with Claude failed: {e!s}. Check ANTHROPIC_API_KEY environment variable.",
-            )
+            ) from e
 
     async def _generate_with_template(self, request: CodeGenerationRequest) -> str:
         """
@@ -741,7 +741,7 @@ module.exports = {{ main }};
 
         # Basic analysis (in production, use tools like pylint, sonar, etc.)
         lines = code.split("\n")
-        analysis["lines_of_code"] = len([l for l in lines if l.strip()])
+        analysis["lines_of_code"] = len([line for line in lines if line.strip()])
 
         # Check for basic issues
         if language == CodeLanguage.PYTHON and "except:" in code:

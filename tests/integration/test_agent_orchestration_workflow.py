@@ -20,16 +20,16 @@ Per Truth Protocol:
 """
 
 import asyncio
-from datetime import datetime, timedelta
-import json
+import contextlib
+from datetime import datetime
 import logging
-from pathlib import Path
 import time
 from typing import Any
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from agent.modules.base_agent import AgentStatus, BaseAgent
 from agent.orchestrator import (
     AgentCapability,
     AgentOrchestrator,
@@ -37,7 +37,6 @@ from agent.orchestrator import (
     ExecutionPriority,
     TaskStatus,
 )
-from agent.modules.base_agent import AgentStatus, BaseAgent
 
 
 logger = logging.getLogger(__name__)
@@ -465,10 +464,8 @@ class TestFailureAndFallback:
                 required_agents=["test_agent"],
                 priority=ExecutionPriority.MEDIUM,
             )
-            try:
+            with contextlib.suppress(Exception):
                 await orchestrator.execute_task(task)
-            except Exception:
-                pass
 
         assert orchestrator.get_circuit_breaker_state("test_agent") == "OPEN"
 
@@ -499,9 +496,9 @@ class TestPerformanceAndLoadBalancing:
         )
 
         latencies = []
-        for i in range(100):
+        for _i in range(100):
             start = time.time()
-            agent = orchestrator.select_agent_for_capability("content_generation")
+            orchestrator.select_agent_for_capability("content_generation")
             latency = (time.time() - start) * 1000
             latencies.append(latency)
 
@@ -544,7 +541,7 @@ class TestPerformanceAndLoadBalancing:
             for i in range(20)
         ]
 
-        results = await asyncio.gather(*[orchestrator.execute_task(task) for task in tasks])
+        await asyncio.gather(*[orchestrator.execute_task(task) for task in tasks])
 
         claude_calls = mock_claude_agent.execute.call_count
         gpt_calls = mock_gpt_agent.execute.call_count
@@ -855,7 +852,7 @@ class TestErrorRecoveryAndMonitoring:
             priority=ExecutionPriority.MEDIUM,
         )
 
-        for i in range(3):
+        for _i in range(3):
             try:
                 result = await orchestrator.execute_task_with_retry(task, max_retries=3, backoff_seconds=0.2)
                 if result and result.get("status") == "success":
@@ -908,10 +905,8 @@ class TestErrorRecoveryAndMonitoring:
             priority=ExecutionPriority.MEDIUM,
         )
 
-        try:
+        with contextlib.suppress(Exception):
             await orchestrator.execute_task(task)
-        except Exception:
-            pass
 
         error_ledger = orchestrator.get_error_ledger()
         assert len(error_ledger) > 0

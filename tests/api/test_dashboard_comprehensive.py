@@ -353,7 +353,7 @@ class TestDashboardEndpoints:
         with patch('api.v1.dashboard.templates') as mock_templates:
             mock_templates.TemplateResponse.return_value = HTMLResponse(content="<html>Dashboard</html>")
 
-            response = await get_dashboard_page(mock_request)
+            await get_dashboard_page(mock_request)
 
             mock_templates.TemplateResponse.assert_called_once()
             assert "request" in str(mock_templates.TemplateResponse.call_args)

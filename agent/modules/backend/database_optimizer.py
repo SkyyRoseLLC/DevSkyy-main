@@ -223,9 +223,9 @@ class DatabaseConnectionPool:
                 connection = await asyncio.wait_for(self.connections.get(), timeout=self.connection_timeout)
                 self.connection_stats["reused"] += 1
                 return connection
-        except TimeoutError:
+        except TimeoutError as timeout_err:
             self.connection_stats["timeouts"] += 1
-            raise Exception("Connection pool timeout")
+            raise Exception("Connection pool timeout") from timeout_err
 
     async def return_connection(self, connection):
         """Return connection to pool."""

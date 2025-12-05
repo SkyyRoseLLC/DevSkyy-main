@@ -195,7 +195,7 @@ class AutomatedModelComparison:
         """
         results = {}
 
-        for model_name in self.model_history.keys():
+        for model_name in self.model_history:
             try:
                 performance = await self._test_model(model_name, prompt, task_type)
                 results[model_name] = performance

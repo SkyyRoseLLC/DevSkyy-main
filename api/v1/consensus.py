@@ -289,7 +289,7 @@ async def start_consensus_workflow(
 
     except Exception as e:
         logger.exception("Failed to start consensus workflow")
-        raise HTTPException(status_code=500, detail=f"Workflow failed: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Workflow failed: {e!s}") from e
 
 
 @router.get("/workflow/{workflow_id}", response_model=WorkflowStatusResponse)
@@ -360,7 +360,7 @@ async def get_workflow_status(workflow_id: str, orchestrator: ConsensusOrchestra
         raise
     except Exception as e:
         logger.exception(f"Failed to get workflow status: {workflow_id}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/approve/{workflow_id}", response_class=HTMLResponse)
@@ -418,12 +418,12 @@ async def approve_content(
         </html>
         """
 
-    except ValueError:
+    except ValueError as val_err:
         logger.error(f"Invalid approval token for workflow {workflow_id}")
-        raise HTTPException(status_code=403, detail="Invalid approval token")
+        raise HTTPException(status_code=403, detail="Invalid approval token") from val_err
     except Exception as e:
         logger.exception(f"Failed to process approval: {workflow_id}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/reject/{workflow_id}", response_class=HTMLResponse)
@@ -482,12 +482,12 @@ async def reject_content(
         </html>
         """
 
-    except ValueError:
+    except ValueError as val_err:
         logger.error(f"Invalid rejection token for workflow {workflow_id}")
-        raise HTTPException(status_code=403, detail="Invalid rejection token")
+        raise HTTPException(status_code=403, detail="Invalid rejection token") from val_err
     except Exception as e:
         logger.exception(f"Failed to process rejection: {workflow_id}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/publish/{workflow_id}", response_model=dict)
@@ -531,7 +531,7 @@ async def publish_approved_content(workflow_id: str, orchestrator: ConsensusOrch
         raise
     except Exception as e:
         logger.exception(f"Failed to publish content: {workflow_id}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/health")

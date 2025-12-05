@@ -186,7 +186,7 @@ async def export_user_data(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to export user data",
-        )
+        ) from e
 
 
 # ============================================================================
@@ -298,7 +298,7 @@ async def delete_user_data(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to delete user data",
-        )
+        ) from e
 
 
 # ============================================================================
@@ -373,7 +373,7 @@ async def list_data_subject_requests(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve data subject requests",
-        )
+        ) from e
 
 
 def _sanitize_log_input(self, user_input):

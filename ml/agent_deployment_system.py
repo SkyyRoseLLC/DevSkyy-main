@@ -430,13 +430,10 @@ class CategoryHeadApprovalSystem:
         # Determine final decision
         if approved_count >= 2:
             final_decision = ApprovalStatus.APPROVED
-            consensus = "Both category heads approved the deployment."
         elif rejected_count >= 1:
             final_decision = ApprovalStatus.REJECTED
-            consensus = "One or more category heads rejected the deployment."
         else:
             final_decision = ApprovalStatus.PENDING
-            consensus = "Insufficient approvals. Need 2 approvals to proceed."
 
         # Generate detailed consensus reasoning
         consensus_reasoning = self._generate_consensus_reasoning(approvals, final_decision)

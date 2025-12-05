@@ -333,7 +333,7 @@ class AgentUpgradeSystem:
             "deployments": []
         }
 
-        for agent_type in self.upgrade_catalog.keys():
+        for agent_type in self.upgrade_catalog:
             try:
                 deployment = await self.deploy_upgrade(
                     agent_type=agent_type,
@@ -367,7 +367,7 @@ class AgentUpgradeSystem:
         """Get status of all active upgrades."""
         statuses = []
 
-        for upgrade_id in self.active_upgrades.keys():
+        for upgrade_id in self.active_upgrades:
             status = await self.get_upgrade_status(uuid.UUID(upgrade_id))
             statuses.append(status)
 

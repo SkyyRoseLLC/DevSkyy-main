@@ -507,12 +507,12 @@ try:
     from api.v1.consensus import router as consensus_router
     from api.v1.content import router as content_router
     from api.v1.dashboard import router as dashboard_router
-    from api.v1.health import router as health_router
 
     # DevSkyy Automation Routers (n8n replacements)
     from api.v1.ecommerce import router as ecommerce_router
     from api.v1.finetuning import router as finetuning_router
     from api.v1.gdpr import router as gdpr_router
+    from api.v1.health import router as health_router
     from api.v1.mcp import router as mcp_router
     from api.v1.ml import router as ml_router
     from api.v1.monitoring import router as monitoring_router
@@ -824,10 +824,10 @@ async def get_agent_endpoint(agent_type: str, agent_name: str):
         }
 
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
         logger.error(f"Agent endpoint error: {e}")
-        raise HTTPException(status_code=500, detail="Internal server error")
+        raise HTTPException(status_code=500, detail="Internal server error") from e
 
 
 @app.post("/api/v1/agents/{agent_type}/{agent_name}/execute")
@@ -855,10 +855,10 @@ async def execute_agent_task(agent_type: str, agent_name: str, task_data: dict[s
         return result
 
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
         logger.error(f"Agent execution error: {e}")
-        raise HTTPException(status_code=500, detail="Internal server error")
+        raise HTTPException(status_code=500, detail="Internal server error") from e
 
 
 # ============================================================================
@@ -902,7 +902,7 @@ async def upload_3d_model(file_path: str, model_format: str, brand_context: str 
 
     except Exception as e:
         logger.error(f"3D model upload error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/api/v1/avatars/create")
@@ -932,7 +932,7 @@ async def create_avatar(avatar_data: dict[str, Any]):
 
     except Exception as e:
         logger.error(f"Avatar creation error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.get("/api/v1/system/advanced-status")
@@ -954,7 +954,7 @@ async def get_advanced_system_status():
 
     except Exception as e:
         logger.error(f"Advanced status error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================
@@ -973,7 +973,7 @@ async def get_prometheus_metrics():
             return Response(content="# Metrics collector not available\n", media_type="text/plain")
     except Exception as e:
         logger.error(f"Metrics endpoint error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.get("/api/v1/monitoring/status")
@@ -1005,7 +1005,7 @@ async def get_monitoring_status():
 
     except Exception as e:
         logger.error(f"Monitoring status error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.get("/api/v1/monitoring/incidents")
@@ -1039,7 +1039,7 @@ async def get_active_incidents():
 
     except Exception as e:
         logger.error(f"Incidents endpoint error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================
@@ -1112,7 +1112,7 @@ async def build_and_deploy_theme(theme_request: dict[str, Any]):
 
     except Exception as e:
         logger.error(f"Theme build error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.get("/api/v1/themes/build-status/{build_id}")
@@ -1157,7 +1157,7 @@ async def get_theme_build_status(build_id: str):
         raise
     except Exception as e:
         logger.error(f"Build status error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/api/v1/themes/upload-only")
@@ -1208,7 +1208,7 @@ async def upload_theme_only(upload_request: dict[str, Any]):
 
     except Exception as e:
         logger.error(f"Theme upload error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.get("/api/v1/themes/system-status")
@@ -1234,7 +1234,7 @@ async def get_theme_system_status():
 
     except Exception as e:
         logger.error(f"Theme system status error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/api/v1/themes/skyy-rose/build")
@@ -1278,7 +1278,7 @@ async def build_skyy_rose_theme(theme_request: dict[str, Any]):
         raise
     except Exception as e:
         logger.error(f"Skyy Rose theme build error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.get("/api/v1/themes/credentials/status")
@@ -1313,7 +1313,7 @@ async def get_credentials_status():
 
     except Exception as e:
         logger.error(f"Credentials status error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/api/v1/themes/credentials/test")
@@ -1379,7 +1379,7 @@ async def test_wordpress_connection(test_request: dict[str, Any]):
         raise
     except Exception as e:
         logger.error(f"WordPress connection test error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================

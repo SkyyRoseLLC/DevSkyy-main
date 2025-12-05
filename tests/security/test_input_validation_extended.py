@@ -282,7 +282,7 @@ class TestAdvancedCommandInjection:
         # IFS variable substitution without command separator may not be caught
         # This is a limitation - the pattern requires ; | & before the command
         # Application should validate environment variable usage separately
-        result = sanitizer.sanitize_command("${IFS}cat${IFS}/etc/passwd")
+        sanitizer.sanitize_command("${IFS}cat${IFS}/etc/passwd")
         # Even if not caught, app should validate
 
         # Plain environment variables without command execution pass through

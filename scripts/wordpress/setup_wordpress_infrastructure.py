@@ -60,7 +60,7 @@ class WordPressInfrastructureSetup:
         if all_configured:
             logger.info("✅ WordPress OAuth 2.0 credentials configured")
         else:
-            missing = [var for var in required_oauth if not os.getenv(var)]
+            [var for var in required_oauth if not os.getenv(var)]
             logger.warning("⚠️  Missing one or more required WordPress OAuth credentials.")
 
         return all_configured
@@ -404,7 +404,7 @@ class WordPressInfrastructureSetup:
             }
         }
 
-        for job_key, job_data in examples.items():
+        for job_data in examples.values():
             logger.info(f"\n   📌 {job_data['job_name']}")
             logger.info(f"      Category: {job_data['category']}")
             logger.info(f"      Tools: {len(job_data['required_tools'])}")

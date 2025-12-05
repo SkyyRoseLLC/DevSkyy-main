@@ -19,9 +19,8 @@ Per Truth Protocol:
 - Rule #10: No-skip rule - all errors logged
 """
 
-import asyncio
+import contextlib
 from datetime import datetime
-import json
 import logging
 from pathlib import Path
 import tempfile
@@ -33,8 +32,6 @@ import pytest
 
 from agent.fashion_orchestrator import (
     FashionAssetType,
-    AIModelProvider,
-    ProductDescription,
     FashionOrchestrator,
 )
 
@@ -278,7 +275,7 @@ class TestMultiLanguageContent:
             "de_DE": "279,99 €",
         }
 
-        for locale, expected_format_pattern in locales.items():
+        for locale in locales:
             formatted_price = orchestrator.format_price(
                 price=fashion_product_context["price"],
                 locale=locale,
@@ -437,7 +434,7 @@ class TestImageProcessing:
             )
 
             assert len(variants) == len(sizes)
-            assert all(size_name in variants for size_name in sizes.keys())
+            assert all(size_name in variants for size_name in sizes)
 
     @pytest.mark.asyncio
     async def test_generate_alt_text(self, fashion_product_context: dict[str, Any]):
@@ -917,13 +914,11 @@ class TestEndToEndContentWorkflow:
 
         orchestrator.enable_error_ledger()
 
-        try:
+        with contextlib.suppress(Exception):
             await orchestrator.create_wordpress_post({
                 "title": "Test Post",
                 "content": "Test content",
             })
-        except Exception:
-            pass
 
         error_ledger = orchestrator.get_error_ledger()
         assert len(error_ledger) > 0

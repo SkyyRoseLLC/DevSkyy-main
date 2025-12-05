@@ -86,7 +86,7 @@ async def execute_scanner(
         )
     except Exception as e:
         logger.error(f"Scanner V1 execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/scanner-v2/execute", response_model=AgentExecuteResponse)
@@ -109,7 +109,7 @@ async def execute_scanner_v2(
         )
     except Exception as e:
         logger.error(f"Scanner V2 execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================
@@ -144,7 +144,7 @@ async def execute_fixer(request: AgentExecutionRequest, current_user: TokenData 
         )
     except Exception as e:
         logger.error(f"Fixer V1 execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/fixer-v2/execute", response_model=AgentExecuteResponse)
@@ -164,7 +164,7 @@ async def execute_fixer_v2(request: AgentExecutionRequest, current_user: TokenDa
         )
     except Exception as e:
         logger.error(f"Fixer V2 execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================
@@ -192,7 +192,7 @@ async def execute_claude_sonnet(
         )
     except Exception as e:
         logger.error(f"Claude Sonnet execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/openai/execute", response_model=AgentExecuteResponse)
@@ -215,7 +215,7 @@ async def execute_openai(
         )
     except Exception as e:
         logger.error(f"OpenAI execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/multi-model-ai/execute", response_model=AgentExecuteResponse)
@@ -238,7 +238,7 @@ async def execute_multi_model_ai(
         )
     except Exception as e:
         logger.error(f"Multi-Model AI execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================
@@ -266,7 +266,7 @@ async def execute_ecommerce(
         )
     except Exception as e:
         logger.error(f"E-commerce execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/inventory/execute", response_model=AgentExecuteResponse)
@@ -289,7 +289,7 @@ async def execute_inventory(
         )
     except Exception as e:
         logger.error(f"Inventory execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/financial/execute", response_model=AgentExecuteResponse)
@@ -312,7 +312,7 @@ async def execute_financial(
         )
     except Exception as e:
         logger.error(f"Financial execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================
@@ -340,7 +340,7 @@ async def execute_brand_intelligence(
         )
     except Exception as e:
         logger.error(f"Brand Intelligence execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/seo-marketing/execute", response_model=AgentExecuteResponse)
@@ -363,7 +363,7 @@ async def execute_seo_marketing(
         )
     except Exception as e:
         logger.error(f"SEO Marketing execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/social-media/execute", response_model=AgentExecuteResponse)
@@ -386,7 +386,7 @@ async def execute_social_media(
         )
     except Exception as e:
         logger.error(f"Social Media execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/email-sms/execute", response_model=AgentExecuteResponse)
@@ -409,7 +409,7 @@ async def execute_email_sms(
         )
     except Exception as e:
         logger.error(f"Email/SMS execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/marketing-content/execute", response_model=AgentExecuteResponse)
@@ -432,7 +432,7 @@ async def execute_marketing_content(
         )
     except Exception as e:
         logger.error(f"Marketing Content execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================
@@ -460,7 +460,7 @@ async def execute_wordpress(
         )
     except Exception as e:
         logger.error(f"WordPress execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/wordpress-theme-builder/execute", response_model=AgentExecuteResponse)
@@ -483,7 +483,7 @@ async def execute_wordpress_theme_builder(
         )
     except Exception as e:
         logger.error(f"WordPress Theme Builder execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================
@@ -511,7 +511,7 @@ async def execute_customer_service(
         )
     except Exception as e:
         logger.error(f"Customer Service execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/voice-audio/execute", response_model=AgentExecuteResponse)
@@ -534,7 +534,7 @@ async def execute_voice_audio(
         )
     except Exception as e:
         logger.error(f"Voice/Audio execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================
@@ -562,7 +562,7 @@ async def execute_blockchain_nft(
         )
     except Exception as e:
         logger.error(f"Blockchain/NFT execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/code-generation/execute", response_model=AgentExecuteResponse)
@@ -584,7 +584,7 @@ async def execute_code_generation(
         )
     except Exception as e:
         logger.error(f"Code Generation execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/security/execute", response_model=AgentExecuteResponse)
@@ -604,7 +604,7 @@ async def execute_security(request: AgentExecutionRequest, current_user: TokenDa
         )
     except Exception as e:
         logger.error(f"Security execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.post("/performance/execute", response_model=AgentExecuteResponse)
@@ -627,7 +627,7 @@ async def execute_performance(
         )
     except Exception as e:
         logger.error(f"Performance execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================
@@ -662,7 +662,7 @@ async def batch_execute(request: BatchRequest, current_user: TokenData = Depends
 
     except Exception as e:
         logger.error(f"Batch execution failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 # ============================================================================

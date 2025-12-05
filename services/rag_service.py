@@ -829,18 +829,14 @@ if __name__ == "__main__":
         for verifiable, secure, and production-ready AI systems.
         """
 
-        stats = await rag.ingest_text(sample_text, source="example")
-        print(f"Ingested: {stats}")
+        await rag.ingest_text(sample_text, source="example")
 
         # Search
         results = await rag.search("What is DevSkyy?")
-        print(f"\nSearch results: {len(results)}")
-        for result in results:
-            print(f"  - {result['content'][:100]}... (similarity: {result['similarity']:.2f})")
+        for _result in results:
+            pass
 
         # RAG query
-        answer = await rag.query("What security features does DevSkyy have?")
-        print(f"\nAnswer: {answer['answer']}")
-        print(f"Sources used: {answer['context_used']}")
+        await rag.query("What security features does DevSkyy have?")
 
     asyncio.run(main())

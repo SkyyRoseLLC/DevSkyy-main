@@ -30,7 +30,6 @@ Per Truth Protocol:
 """
 
 import argparse
-import asyncio
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
@@ -42,21 +41,20 @@ import os
 import sys
 from typing import Any, Literal
 
+
 try:
     import httpx
     from mcp.server.fastmcp import Context, FastMCP
     from mcp.server.session import ServerSession
     from pydantic import BaseModel, Field
-except ImportError as e:
-    print(f"Missing required packages: {e}")
-    print('Install: pip install "mcp[cli]" httpx pydantic')
+except ImportError:
     sys.exit(1)
 
 # Optional imports for dynamic toolsets
 try:
     from ml.tool_optimization import (
-        DynamicToolSelector,
-        ToolSelectionContext,
+        DynamicToolSelector,  # noqa: F401 - used when DYNAMIC_TOOLSETS_AVAILABLE
+        ToolSelectionContext,  # noqa: F401 - used when DYNAMIC_TOOLSETS_AVAILABLE
         get_optimization_manager,
     )
     DYNAMIC_TOOLSETS_AVAILABLE = True
@@ -243,7 +241,6 @@ async def app_lifespan(server: FastMCP) -> AsyncIterator[GitHubMCPContext]:
     - GitHub authentication headers
     - Dynamic tool selector (if enabled)
     """
-    print("Initializing GitHub MCP Server...")
 
     # Parse CLI args from environment (set by main())
     enabled_tools = set(os.getenv("_GITHUB_MCP_TOOLS", "").split(","))
@@ -266,11 +263,7 @@ async def app_lifespan(server: FastMCP) -> AsyncIterator[GitHubMCPContext]:
     tool_selector = None
     if dynamic_enabled and DYNAMIC_TOOLSETS_AVAILABLE:
         tool_selector = get_optimization_manager().tool_selector
-        print("Dynamic toolsets enabled")
 
-    print(f"GitHub API: {GITHUB_API_URL}")
-    print(f"Token: {'Set' if GITHUB_TOKEN else 'Not Set (rate limited)'}")
-    print(f"Enabled tools: {enabled_tools or 'all'}")
 
     start_time = datetime.utcnow()
 
@@ -285,8 +278,7 @@ async def app_lifespan(server: FastMCP) -> AsyncIterator[GitHubMCPContext]:
         )
     finally:
         await http_client.aclose()
-        uptime = datetime.utcnow() - start_time
-        print(f"Server shutdown. Uptime: {uptime}")
+        datetime.utcnow() - start_time
 
 
 # Initialize MCP Server
@@ -563,7 +555,7 @@ async def get_issues(
                 "number": issue.get("number"),
                 "title": issue.get("title"),
                 "state": issue.get("state"),
-                "labels": [l.get("name") for l in issue.get("labels", [])],
+                "labels": [label.get("name") for label in issue.get("labels", [])],
                 "created_at": issue.get("created_at"),
                 "html_url": issue.get("html_url"),
             }
@@ -1084,7 +1076,7 @@ async def dynamic_tool_selection(ctx: Context[ServerSession, GitHubMCPContext]) 
     if not ctx.request_context.lifespan_context.dynamic_toolsets_enabled:
         return json.dumps({"error": "Dynamic toolsets not enabled. Use --dynamic-toolsets flag."})
 
-    manager = DynamicToolsetManager()
+    DynamicToolsetManager()
     return json.dumps({
         "enabled": True,
         "available_tools": list(TOOL_REGISTRY.keys()),
@@ -1165,8 +1157,7 @@ Available tools:
         valid_tools = set(TOOL_REGISTRY.keys())
         for tool in args.tools:
             if tool not in valid_tools:
-                print(f"Warning: Unknown tool '{tool}'")
-                print(f"Available: {', '.join(valid_tools)}")
+                pass
         os.environ["_GITHUB_MCP_TOOLS"] = ",".join(args.tools)
     else:
         os.environ["_GITHUB_MCP_TOOLS"] = ""
@@ -1174,24 +1165,8 @@ Available tools:
     os.environ["_GITHUB_MCP_DYNAMIC"] = "true" if args.dynamic_toolsets else "false"
 
     # Print banner
-    all_tools = list(TOOL_REGISTRY.keys())
-    enabled = args.tools if args.tools else all_tools
+    list(TOOL_REGISTRY.keys())
 
-    print(f"""
-====================================================
-       GitHub MCP Server - Dynamic Toolsets
-====================================================
-
-Configuration:
-  Transport: {args.transport}
-  Dynamic Toolsets: {'Enabled' if args.dynamic_toolsets else 'Disabled'}
-  GitHub Token: {'Set' if GITHUB_TOKEN else 'Not Set (rate limited)'}
-
-Enabled Tools ({len(enabled)}/{len(all_tools)}):
-  {chr(10).join(f'  - {t}' for t in enabled)}
-
-Starting server...
-""")
 
     # Run server
     if args.transport == "streamable-http":

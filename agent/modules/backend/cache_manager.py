@@ -290,7 +290,8 @@ async def cache_cleanup_task():
 def start_cache_cleanup():
     """Start the background cache cleanup task."""
     try:
-        asyncio.create_task(cache_cleanup_task())
+        _task = asyncio.create_task(  # noqa: RUF006 - fire and forget task
+        cache_cleanup_task())
         logger.info("Started cache cleanup background task")
     except RuntimeError as e:
         if "no running event loop" in str(e):

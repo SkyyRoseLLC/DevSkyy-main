@@ -428,7 +428,7 @@ class TestPublishContentBatch:
 
         # Call endpoint
         topics = ["Topic 1", "Topic 2"]
-        result = await publish_content_batch(
+        await publish_content_batch(
             topics=topics,
             orchestrator=mock_orchestrator,
         )

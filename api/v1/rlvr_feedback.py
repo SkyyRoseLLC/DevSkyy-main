@@ -102,7 +102,7 @@ async def submit_user_feedback(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to process feedback: {e!s}"
-        )
+        ) from e
 
 
 @router.post("/feedback/test-results", status_code=status.HTTP_201_CREATED)
@@ -139,7 +139,7 @@ async def submit_test_results(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to process test results: {e!s}"
-        )
+        ) from e
 
 
 @router.post("/feedback/code-analysis", status_code=status.HTTP_201_CREATED)
@@ -178,7 +178,7 @@ async def submit_code_analysis(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to process code analysis: {e!s}"
-        )
+        ) from e
 
 
 # ============================================================================
@@ -214,7 +214,7 @@ async def collect_training_data(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to collect training data: {e!s}"
-        )
+        ) from e
 
 
 @router.get("/training/stats/{agent_id}")
@@ -236,7 +236,7 @@ async def get_training_stats(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get training stats: {e!s}"
-        )
+        ) from e
 
 
 # ============================================================================
@@ -281,12 +281,12 @@ async def start_fine_tuning(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
-        )
+        ) from e
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to start fine-tuning: {e!s}"
-        )
+        ) from e
 
 
 @router.get("/fine-tune/status/{run_id}")
@@ -336,7 +336,7 @@ async def get_fine_tuning_status(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get status: {e!s}"
-        )
+        ) from e
 
 
 @router.post("/fine-tune/deploy/{run_id}", status_code=status.HTTP_200_OK)
@@ -369,12 +369,12 @@ async def deploy_fine_tuned_agent(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
-        )
+        ) from e
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to deploy agent: {e!s}"
-        )
+        ) from e
 
 
 # ============================================================================
@@ -455,4 +455,4 @@ async def get_agent_analytics(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get analytics: {e!s}"
-        )
+        ) from e

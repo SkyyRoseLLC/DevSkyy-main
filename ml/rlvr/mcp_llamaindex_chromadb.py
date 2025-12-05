@@ -531,35 +531,25 @@ async def production_demo():
         agent_id = uuid.UUID("12345678-1234-5678-1234-567812345678")  # Example
 
         # Sync training data
-        print("Syncing training data from Neon to ChromaDB...")
         await orchestrator.sync_training_data_to_chromadb(agent_id)
 
         # Get stats
-        stats = orchestrator.get_collection_stats(agent_id)
-        print(f"ChromaDB Stats: {stats}")
+        orchestrator.get_collection_stats(agent_id)
 
         # Hybrid retrieval
-        print("\nPerforming hybrid retrieval...")
-        examples = await orchestrator.hybrid_retrieve_best_examples(
+        await orchestrator.hybrid_retrieve_best_examples(
             agent_id,
             query="high quality examples",
             min_score=0.8,
             top_k=5
         )
-        print(f"Retrieved {len(examples)} examples")
 
         # Optimize prompt
-        print("\nOptimizing prompt with Claude...")
-        result = await orchestrator.optimize_prompt_with_production_rag(
+        await orchestrator.optimize_prompt_with_production_rag(
             agent_id,
             top_k_examples=10
         )
 
-        print("\nOptimization Complete:")
-        print(f"Agent: {result['agent_name']}")
-        print(f"Version: {result['version_before']} → {result['version_after']}")
-        print(f"Method: {result['method']}")
-        print(f"Strategy: {result['retrieval_strategy']}")
 
 
 if __name__ == "__main__":

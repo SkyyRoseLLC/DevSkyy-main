@@ -407,7 +407,7 @@ API Reference: https://devskyy.com/api/docs
 
     except Exception as e:
         logger.error(f"Failed to generate MCP install deeplink: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to generate MCP configuration: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate MCP configuration: {e!s}") from e
 
 
 @router.get("/config", response_model=dict[str, Any])
@@ -449,7 +449,7 @@ async def get_mcp_config(
 
     except Exception as e:
         logger.error(f"Failed to generate MCP configuration: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to generate MCP configuration: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate MCP configuration: {e!s}") from e
 
 
 @router.get("/status", response_model=MCPStatusResponse)
@@ -484,7 +484,7 @@ async def get_mcp_status():
 
     except Exception as e:
         logger.error(f"Failed to get MCP status: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to get MCP status: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to get MCP status: {e!s}") from e
 
 
 @router.post("/validate")
@@ -552,7 +552,7 @@ async def validate_api_key(
         raise
     except Exception as e:
         logger.error(f"API key validation failed: {e}")
-        raise HTTPException(status_code=500, detail=f"Validation failed: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Validation failed: {e!s}") from e
 
 
 @router.post("/servers/add", response_model=MCPConfigResponse)
@@ -664,10 +664,10 @@ All {server_count} servers should be listed.
 
     except ValueError as e:
         logger.error(f"Validation error adding MCP server: {e}")
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
         logger.error(f"Failed to add MCP server: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to add MCP server: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to add MCP server: {e!s}") from e
 
 
 @router.post("/servers/multi", response_model=MCPConfigResponse)
@@ -793,10 +793,10 @@ For issues with specific servers, check their documentation:
         raise
     except ValueError as e:
         logger.error(f"Validation error in multi-server config: {e}")
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
     except Exception as e:
         logger.error(f"Failed to generate multi-server config: {e}")
-        raise HTTPException(status_code=500, detail=f"Failed to generate configuration: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate configuration: {e!s}") from e
 
 
 @router.get("/servers/huggingface")
@@ -909,4 +909,4 @@ https://huggingface.co/docs/mcp
         raise HTTPException(
             status_code=500,
             detail=f"Failed to generate HuggingFace configuration: {e!s}",
-        )
+        ) from e

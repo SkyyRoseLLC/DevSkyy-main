@@ -240,7 +240,7 @@ Output ONLY valid JSON with this exact structure:
 
         except Exception as e:
             logger.exception("Anthropic generation failed")
-            raise AIProviderError(f"Anthropic error: {e!s}")
+            raise AIProviderError(f"Anthropic error: {e!s}") from e
 
     async def _generate_with_openai(self, product: ProductInfo) -> SEOMetaTags:
         """Generate SEO tags using OpenAI"""
@@ -267,7 +267,7 @@ Output ONLY valid JSON with this exact structure:
 
         except Exception as e:
             logger.exception("OpenAI generation failed")
-            raise AIProviderError(f"OpenAI error: {e!s}")
+            raise AIProviderError(f"OpenAI error: {e!s}") from e
 
     async def generate_seo_tags(self, product: ProductInfo, fallback: bool = True) -> SEOMetaTags:
         """
@@ -306,7 +306,7 @@ Output ONLY valid JSON with this exact structure:
                     return await self._generate_with_anthropic(product)
             except AIProviderError as fallback_error:
                 logger.exception("Fallback provider also failed")
-                raise SEOOptimizerError(f"Both providers failed. Primary: {e!s}, Fallback: {fallback_error!s}")
+                raise SEOOptimizerError(f"Both providers failed. Primary: {e!s}, Fallback: {fallback_error!s}") from fallback_error
 
         raise SEOOptimizerError("No AI provider available")
 

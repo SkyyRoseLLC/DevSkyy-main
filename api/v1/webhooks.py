@@ -85,7 +85,7 @@ async def create_webhook_subscription(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to create subscription",
-        )
+        ) from e
 
 
 @router.get("/subscriptions", response_model=list[WebhookSubscription])
@@ -235,7 +235,7 @@ async def test_webhook(request: TestWebhookRequest, current_user: TokenData = De
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to send test webhook",
-        )
+        ) from e
 
 
 # ============================================================================

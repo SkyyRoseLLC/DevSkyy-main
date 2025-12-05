@@ -10,12 +10,12 @@ Truth Protocol Compliance:
 - Rule #10: No-Skip Rule
 """
 
-import asyncio
 from datetime import datetime
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from agent.modules.base_agent import AgentStatus
 from agent.orchestrator import (
     AgentCapability,
     AgentOrchestrator,
@@ -24,7 +24,6 @@ from agent.orchestrator import (
     MockAgent,
     TaskStatus,
 )
-from agent.modules.base_agent import AgentStatus
 
 
 # =============================================================================
@@ -460,7 +459,7 @@ class TestMetricsAndMonitoring:
         """Test execution history is limited to 1000 records."""
         orch = AgentOrchestrator()
 
-        for i in range(1100):
+        for _i in range(1100):
             orch._record_execution("agent", True, 0.1)
 
         assert len(orch.execution_history) == 1000

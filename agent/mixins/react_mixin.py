@@ -31,6 +31,7 @@ from enum import Enum
 import logging
 from typing import Any
 
+
 try:
     import dspy
     DSPY_AVAILABLE = True
@@ -176,7 +177,7 @@ class ReActCapableMixin:
         elapsed = (datetime.now() - start_time).total_seconds() * 1000
         trace.total_time_ms = elapsed
         trace.iterations = len([s for s in trace.steps if s.step_type == ReasoningStepType.THOUGHT])
-        trace.tools_used = list(set(s.tool_name for s in trace.steps if s.tool_name))
+        trace.tools_used = list({s.tool_name for s in trace.steps if s.tool_name})
 
         # Store trace
         self._react_traces.append(trace)

@@ -13,30 +13,24 @@ Per Truth Protocol:
 """
 
 import os
+
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
 
 # Import the module
 from github_mcp_server import (
-    GetFileContentsRequest,
-    FileContentsResult,
-    SearchCodeRequest,
-    CodeSearchResult,
-    GetIssuesRequest,
-    IssuesResult,
-    CreateIssueRequest,
-    CreateIssueResult,
-    GetPullRequestsRequest,
-    PullRequestsResult,
-    GetRepoInfoRequest,
-    RepoInfoResult,
-    ListBranchesRequest,
-    BranchesResult,
-    GetCommitsRequest,
-    CommitsResult,
-    GitHubToolStatus,
-    DynamicToolsetManager,
     TOOL_REGISTRY,
+    CreateIssueRequest,
+    DynamicToolsetManager,
+    FileContentsResult,
+    GetCommitsRequest,
+    GetFileContentsRequest,
+    GetIssuesRequest,
+    GetPullRequestsRequest,
+    GetRepoInfoRequest,
+    GitHubToolStatus,
+    ListBranchesRequest,
+    RepoInfoResult,
+    SearchCodeRequest,
 )
 
 
@@ -232,7 +226,7 @@ class TestToolRegistry:
 
     def test_tool_registry_structure(self):
         """Test tool registry entry structure."""
-        for name, definition in TOOL_REGISTRY.items():
+        for definition in TOOL_REGISTRY.values():
             assert "func" in definition
             assert "description" in definition
             assert "keywords" in definition

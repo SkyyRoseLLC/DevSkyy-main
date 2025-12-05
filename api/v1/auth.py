@@ -98,13 +98,13 @@ async def register(request_data: EnhancedRegisterRequest, request: Request):
         return user
 
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
     except Exception as e:
         logger.error(f"Registration failed: {sanitize_for_log(str(e))}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Registration failed",
-        )
+        ) from e
 
 
 @router.post("/login", response_model=TokenResponse)
@@ -166,7 +166,7 @@ async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Login failed",
-        )
+        ) from e
 
 
 @router.post("/refresh", response_model=TokenResponse)
@@ -212,7 +212,7 @@ async def refresh_token(refresh_token: str, request: Request):
         raise
     except Exception as e:
         logger.error(f"Token refresh failed: {sanitize_for_log(str(e))}")
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token") from e
 
 
 @router.get("/me", response_model=User)

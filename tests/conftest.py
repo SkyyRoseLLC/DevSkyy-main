@@ -9,16 +9,18 @@ This conftest provides:
 """
 
 import asyncio
+from collections.abc import Generator
+import contextlib
 import os
-import sys
 from pathlib import Path
-from typing import AsyncGenerator, Generator
-from unittest.mock import AsyncMock, MagicMock, patch
+import sys
+from unittest.mock import MagicMock, patch
 
-import pytest
 from fastapi.testclient import TestClient
+import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
+
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -177,10 +179,8 @@ def reset_environment():
     yield
     # Cleanup after test
     if os.path.exists("./test_devskyy.db"):
-        try:
+        with contextlib.suppress(Exception):
             os.remove("./test_devskyy.db")
-        except Exception:
-            pass
 
 
 @pytest.fixture

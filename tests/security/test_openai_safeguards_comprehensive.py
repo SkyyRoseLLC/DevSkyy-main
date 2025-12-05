@@ -13,10 +13,9 @@ Python: >=3.11.0
 """
 
 import asyncio
-from datetime import datetime, timedelta
-from pathlib import Path
-from unittest.mock import AsyncMock, MagicMock, patch
+from datetime import datetime
 import time
+from unittest.mock import patch
 
 import pytest
 
@@ -238,7 +237,7 @@ class TestRateLimiter:
     @pytest.mark.asyncio
     async def test_rate_limiter_tracks_requests(self, rate_limiter):
         """Test rate limiter tracks request count"""
-        for i in range(5):
+        for _i in range(5):
             await rate_limiter.check_rate_limit()
 
         assert len(rate_limiter.requests) == 5
@@ -247,7 +246,7 @@ class TestRateLimiter:
     async def test_rate_limiter_blocks_after_limit(self, rate_limiter):
         """Test rate limiter blocks after reaching limit"""
         # Make requests up to limit
-        for i in range(10):
+        for _i in range(10):
             await rate_limiter.check_rate_limit()
 
         # Next request should be blocked
@@ -258,7 +257,7 @@ class TestRateLimiter:
     @pytest.mark.asyncio
     async def test_rate_limiter_consequential_tracking(self, rate_limiter):
         """Test rate limiter tracks consequential requests separately"""
-        for i in range(3):
+        for _i in range(3):
             await rate_limiter.check_rate_limit(is_consequential=True)
 
         assert len(rate_limiter.consequential_requests) == 3
@@ -268,7 +267,7 @@ class TestRateLimiter:
     async def test_rate_limiter_blocks_consequential_after_limit(self, rate_limiter):
         """Test rate limiter blocks consequential requests after limit"""
         # Make consequential requests up to limit
-        for i in range(5):
+        for _i in range(5):
             await rate_limiter.check_rate_limit(is_consequential=True)
 
         # Next consequential request should be blocked
@@ -344,7 +343,7 @@ class TestCircuitBreaker:
             raise Exception("Test failure")
 
         # Fail 3 times (threshold)
-        for i in range(3):
+        for _i in range(3):
             with pytest.raises(Exception):
                 await circuit_breaker.call(failing_func)
 
@@ -358,7 +357,7 @@ class TestCircuitBreaker:
             raise Exception("Test failure")
 
         # Open the circuit
-        for i in range(3):
+        for _i in range(3):
             with pytest.raises(Exception):
                 await circuit_breaker.call(failing_func)
 
@@ -378,7 +377,7 @@ class TestCircuitBreaker:
             return "success"
 
         # Open the circuit
-        for i in range(3):
+        for _i in range(3):
             with pytest.raises(Exception):
                 await circuit_breaker.call(failing_func)
 
@@ -654,7 +653,7 @@ class TestOpenAISafeguardManager:
     async def test_validate_request_rate_limit_exceeded(self, safeguard_manager):
         """Test request validation blocks on rate limit"""
         # Fill up rate limit
-        for i in range(60):
+        for _i in range(60):
             await safeguard_manager.validate_request(
                 operation_type=OperationType.CONTENT_GENERATION,
                 is_consequential=False,

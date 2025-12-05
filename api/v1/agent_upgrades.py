@@ -101,12 +101,12 @@ async def deploy_upgrade(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
-        )
+        ) from e
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to deploy upgrade: {e!s}"
-        )
+        ) from e
 
 
 @router.post("/deploy-all", status_code=status.HTTP_201_CREATED)
@@ -146,7 +146,7 @@ async def deploy_all_upgrades(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to deploy upgrades: {e!s}"
-        )
+        ) from e
 
 
 # ============================================================================
@@ -239,12 +239,12 @@ async def verify_upgrade(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
-        )
+        ) from e
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to verify upgrade: {e!s}"
-        )
+        ) from e
 
 
 # ============================================================================
@@ -280,12 +280,12 @@ async def get_upgrade_status(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=str(e)
-        )
+        ) from e
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get upgrade status: {e!s}"
-        )
+        ) from e
 
 
 @router.get("/status/all")
@@ -312,7 +312,7 @@ async def get_all_upgrades_status(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get upgrades status: {e!s}"
-        )
+        ) from e
 
 
 # ============================================================================
@@ -357,7 +357,7 @@ async def record_ab_test_result(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to record A/B test result: {e!s}"
-        )
+        ) from e
 
 
 @router.get("/ab-test/{ab_test_id}")
@@ -436,7 +436,7 @@ async def get_ab_test_status(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get A/B test status: {e!s}"
-        )
+        ) from e
 
 
 # ============================================================================
@@ -518,7 +518,7 @@ async def get_upgrade_analytics(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get upgrade analytics: {e!s}"
-        )
+        ) from e
 
 
 @router.get("/catalog")

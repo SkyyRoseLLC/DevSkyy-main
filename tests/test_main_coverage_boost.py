@@ -147,7 +147,7 @@ class TestLoggingSetup:
     def test_setup_logging_creates_logs_directory(self, main_module, tmp_path, monkeypatch):
         """Test setup_logging creates logs directory."""
         monkeypatch.chdir(tmp_path)
-        logger = main_module.setup_logging()
+        main_module.setup_logging()
         assert (tmp_path / "logs").exists()
 
     def test_setup_logging_handles_exception(self, main_module):
@@ -331,7 +331,7 @@ class TestStartupShutdown:
         await main_module.shutdown_event()
 
         # Cache close should have been called
-        assert mock_cache.close.called or True  # Gracefully handle if not called
+        assert True  # Gracefully handle if not called
 
     @pytest.mark.asyncio
     async def test_shutdown_event_handles_exceptions(self, main_module):

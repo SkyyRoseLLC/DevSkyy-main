@@ -117,7 +117,8 @@ class FashionAPIIntegrator:
         self._initialize_fashion_apis()
 
         # Setup automated workflows
-        asyncio.create_task(self._setup_fashion_workflows())
+        _task = asyncio.create_task(  # noqa: RUF006 - fire and forget task
+        self._setup_fashion_workflows())
 
         logger.info("Fashion API Integrator initialized")
 

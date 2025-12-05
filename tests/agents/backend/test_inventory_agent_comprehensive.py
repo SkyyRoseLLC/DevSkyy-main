@@ -898,7 +898,7 @@ class TestQuantumOptimization:
         agent = InventoryAgent()
 
         # Patch logger to simulate error
-        with patch("agent.modules.backend.inventory_agent.logger") as mock_logger:
+        with patch("agent.modules.backend.inventory_agent.logger"):
             # Simulate error by patching uuid
             with patch("uuid.uuid4", side_effect=Exception("Quantum error")):
                 result = await agent.quantum_asset_optimization()

@@ -669,17 +669,17 @@ class WorkflowEngine:
             logger.info(f"Step {step.name} completed successfully")
             return result
 
-        except TimeoutError:
+        except TimeoutError as timeout_err:
             step.status = StepStatus.FAILED
             step.error_message = f"Step timed out after {step.timeout} seconds"
             step.completed_at = datetime.now()
-            raise Exception(step.error_message)
+            raise Exception(step.error_message) from timeout_err
 
         except Exception as e:
             step.status = StepStatus.FAILED
             step.error_message = str(e)
             step.completed_at = datetime.now()
-            raise e
+            raise e from e
 
     async def _rollback_workflow(self, workflow: Workflow, executed_steps: set, context: dict[str, Any]):
         """Rollback executed workflow steps"""

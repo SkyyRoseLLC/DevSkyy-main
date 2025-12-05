@@ -386,7 +386,7 @@ class TestReActCapableMixinReasonAndAct:
             """Process x."""
             return x * 2
 
-        result = await agent.reason_and_act(
+        await agent.reason_and_act(
             task="Process data",
             tools=[my_tool],
             max_iterations=1
@@ -637,7 +637,7 @@ class TestReActCapableMixinConfigureDSPy:
         agent = MockAgent()
         mock_lm = MagicMock()
 
-        with patch("agent.mixins.react_mixin.dspy") as mock_dspy:
+        with patch("agent.mixins.react_mixin.dspy"):
             result = agent.configure_dspy(lm=mock_lm)
 
         assert result is True
@@ -726,7 +726,7 @@ class TestIterativeRetrievalMixin:
         )
 
         # Should only have one unique result despite multiple iterations
-        unique_contents = set(r["content"] for r in result["results"])
+        unique_contents = {r["content"] for r in result["results"]}
         assert len(unique_contents) == 1
 
     @pytest.mark.asyncio

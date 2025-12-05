@@ -33,6 +33,9 @@ class CustomPickleObject:
     def __eq__(self, other):
         return isinstance(other, CustomPickleObject) and self.value == other.value
 
+    def __hash__(self):
+        return hash(self.value)
+
 
 # ============================================================================
 # TEST FIXTURES

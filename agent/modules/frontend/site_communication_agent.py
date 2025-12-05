@@ -406,20 +406,3 @@ class SiteCommunicationAgent:
         except Exception as e:
             logger.error(f"Neural communication analysis failed: {e!s}")
             return {"error": str(e), "status": "neural_overload"}
-
-
-# Main communication function
-async def communicate_with_site() -> dict[str, Any]:
-    """Communicate with site and gather insights."""
-    SiteCommunicationAgent()
-
-    return {
-        "communication_status": "active",
-        "insights_gathered": 10,
-        "customer_interactions": 25,
-        "response_quality": "excellent",
-        "connection_status": "connected",
-        "communication_health": "excellent",
-        "agent_status": "active",
-        "timestamp": datetime.now().isoformat(),
-    }

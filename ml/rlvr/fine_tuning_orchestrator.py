@@ -136,8 +136,8 @@ class FineTuningOrchestrator:
         if not isinstance(agent_id, uuid.UUID):
             try:
                 agent_uuid = uuid.UUID(str(agent_id))
-            except Exception:
-                raise ValueError("Invalid agent_id; must be a valid UUID")
+            except Exception as exc:
+                raise ValueError("Invalid agent_id; must be a valid UUID") from exc
         else:
             agent_uuid = agent_id
         safe_agent_id = str(agent_uuid)

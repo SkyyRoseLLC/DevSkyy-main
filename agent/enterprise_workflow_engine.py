@@ -440,7 +440,7 @@ class EnterpriseWorkflowEngine:
                 workflow.current_tasks.add(task_id)
 
                 # Execute task asynchronously
-                asyncio.create_task(self._execute_task(workflow, workflow.tasks[task_id]))
+                _task = asyncio.create_task(self._execute_task(workflow, workflow.tasks[task_id]))  # noqa: RUF006
 
             # Wait a bit before checking again
             await asyncio.sleep(0.1)
@@ -531,8 +531,8 @@ class EnterpriseWorkflowEngine:
 
                     return
 
-                except TimeoutError:
-                    raise Exception(f"Task timeout after {task.timeout_seconds}s")
+                except TimeoutError as timeout_err:
+                    raise Exception(f"Task timeout after {task.timeout_seconds}s") from timeout_err
 
             except Exception as e:
                 error_msg = str(e)

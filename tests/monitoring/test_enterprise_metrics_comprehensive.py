@@ -4,6 +4,7 @@ Comprehensive tests for monitoring/enterprise_metrics.py
 Target: ≥80% coverage (162/203 lines minimum)
 """
 
+import contextlib
 from datetime import datetime
 from unittest.mock import MagicMock, Mock, patch
 
@@ -25,7 +26,7 @@ from monitoring.enterprise_metrics import (
 @pytest.fixture
 def metrics_collector():
     """Create a fresh MetricsCollector instance for testing."""
-    with patch("monitoring.enterprise_metrics.metrics_collector") as mock_collector:
+    with patch("monitoring.enterprise_metrics.metrics_collector"):
         collector = MetricsCollector()
         # Stop background monitoring to avoid interference
         collector.stop_monitoring()
@@ -193,7 +194,7 @@ class TestMetricsCollectorInitialization:
     @patch("monitoring.enterprise_metrics.PROMETHEUS_AVAILABLE", True)
     def test_prometheus_registry_created_when_available(self):
         """Test Prometheus registry is created when available."""
-        with patch("monitoring.enterprise_metrics.CollectorRegistry") as mock_registry:
+        with patch("monitoring.enterprise_metrics.CollectorRegistry"):
             collector = MetricsCollector()
             collector.stop_monitoring()
             assert hasattr(collector, "registry")
@@ -738,10 +739,8 @@ class TestBackgroundMonitoring:
                 # Enable monitoring for the loop
                 metrics_collector._monitoring_active = True
 
-                try:
+                with contextlib.suppress(Exception):
                     metrics_collector._monitoring_loop()
-                except Exception:
-                    pass
 
                 # Should have called collect once before exception
                 assert mock_collect.call_count >= 1
@@ -758,10 +757,8 @@ class TestBackgroundMonitoring:
                 # Enable monitoring for the loop
                 metrics_collector._monitoring_active = True
 
-                try:
+                with contextlib.suppress(Exception):
                     metrics_collector._monitoring_loop()
-                except Exception:
-                    pass
 
                 # Should have attempted collection at least once
                 assert mock_collect.call_count >= 1

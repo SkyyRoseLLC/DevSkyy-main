@@ -78,7 +78,7 @@ class TestAgentDiscovery:
 
     @pytest.mark.asyncio
     async def test_analyze_agent_file_v2_priority(self):
-        registry = AgentRegistry()
+        AgentRegistry()
         # V2 agents should be prioritized over V1
 
 
@@ -471,7 +471,7 @@ class TestAgentReload:
                 with patch.object(registry, "_register_discovered_agent") as mock_register:
                     mock_register.return_value = True
 
-                    success = await registry.reload_agent("test_agent")
+                    await registry.reload_agent("test_agent")
                     # Depends on implementation - might succeed or need actual file
 
     @pytest.mark.asyncio

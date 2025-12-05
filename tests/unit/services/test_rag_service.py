@@ -15,14 +15,11 @@ Version: 1.0.0
 Python: 3.11+
 """
 
-import asyncio
-from datetime import datetime
-from pathlib import Path
 import sys
-from typing import Any
-from unittest.mock import AsyncMock, MagicMock, Mock, patch, mock_open
+from unittest.mock import MagicMock, mock_open, patch
 
 import pytest
+
 
 # Mock external dependencies before importing the module
 sys.modules['chromadb'] = MagicMock()
@@ -201,7 +198,7 @@ class TestRAGServiceInit:
         with patch.object(RAGConfig, "ANTHROPIC_API_KEY", None):
             with patch("services.rag_service.VectorDatabase") as mock_vdb_class:
                 with patch("services.rag_service.DocumentProcessor") as mock_dp_class:
-                    service = RAGService()
+                    RAGService()
 
                     # Assert
                     mock_vdb_class.assert_called_once()
@@ -246,7 +243,7 @@ class TestRAGServiceIngestText:
         custom_metadata = {"author": "Test Author", "category": "Testing"}
 
         # Act
-        result = await rag_service_with_mocks.ingest_text(
+        await rag_service_with_mocks.ingest_text(
             text,
             source=source,
             metadata=custom_metadata
@@ -254,7 +251,6 @@ class TestRAGServiceIngestText:
 
         # Assert
         # Verify custom metadata was added to chunks
-        call_args = mock_doc_processor.process_text.return_value
         rag_service_with_mocks.vector_db.add_documents.assert_called_once()
 
         # Check that metadata was updated in the chunks passed to add_documents
@@ -429,7 +425,7 @@ class TestRAGServiceSearch:
         top_k = 10
 
         # Act
-        results = await rag_service_with_mocks.search(query, top_k=top_k)
+        await rag_service_with_mocks.search(query, top_k=top_k)
 
         # Assert
         mock_vector_db.search.assert_called_once_with(
@@ -446,7 +442,7 @@ class TestRAGServiceSearch:
         filters = {"source": "test.txt"}
 
         # Act
-        results = await rag_service_with_mocks.search(query, filters=filters)
+        await rag_service_with_mocks.search(query, filters=filters)
 
         # Assert
         mock_vector_db.search.assert_called_once_with(
@@ -589,7 +585,7 @@ class TestRAGServiceQuery:
         custom_prompt = "You are a helpful assistant specialized in enterprise AI."
 
         # Act
-        result = await rag_service_with_llm.query(question, system_prompt=custom_prompt)
+        await rag_service_with_llm.query(question, system_prompt=custom_prompt)
 
         # Assert
         call_args = mock_anthropic_client.messages.create.call_args
@@ -603,7 +599,7 @@ class TestRAGServiceQuery:
         top_k = 3
 
         # Act
-        result = await rag_service_with_llm.query(question, top_k=top_k)
+        await rag_service_with_llm.query(question, top_k=top_k)
 
         # Assert
         # Check search was called with correct top_k
@@ -837,7 +833,7 @@ class TestRAGServiceIterativeQuery:
         mock_vector_db.search.return_value = many_results
 
         # Act
-        result = await rag_service_with_llm.iterative_query(question)
+        await rag_service_with_llm.iterative_query(question)
 
         # Assert
         # Check that the context string passed to LLM only contains 10 sources
@@ -1013,30 +1009,27 @@ class TestGetRAGService:
         import services.rag_service as rag_module
         rag_module._rag_service = None  # Reset singleton
 
-        with patch.object(RAGConfig, "ANTHROPIC_API_KEY", None):
-            with patch("services.rag_service.VectorDatabase"):
-                with patch("services.rag_service.DocumentProcessor"):
-                    # Act
-                    service = get_rag_service()
+        with patch.object(RAGConfig, "ANTHROPIC_API_KEY", None), patch("services.rag_service.VectorDatabase"):
+            with patch("services.rag_service.DocumentProcessor"):
+                # Act
+                service = get_rag_service()
 
-                    # Assert
-                    assert isinstance(service, RAGService)
-                    assert rag_module._rag_service is service
+                # Assert
+                assert isinstance(service, RAGService)
+                assert rag_module._rag_service is service
 
     def test_get_rag_service_returns_same_instance(self):
         """Test that get_rag_service returns the same instance (singleton)."""
         # Arrange
-        import services.rag_service as rag_module
 
-        with patch.object(RAGConfig, "ANTHROPIC_API_KEY", None):
-            with patch("services.rag_service.VectorDatabase"):
-                with patch("services.rag_service.DocumentProcessor"):
-                    # Act
-                    service1 = get_rag_service()
-                    service2 = get_rag_service()
+        with patch.object(RAGConfig, "ANTHROPIC_API_KEY", None), patch("services.rag_service.VectorDatabase"):
+            with patch("services.rag_service.DocumentProcessor"):
+                # Act
+                service1 = get_rag_service()
+                service2 = get_rag_service()
 
-                    # Assert
-                    assert service1 is service2
+                # Assert
+                assert service1 is service2
 
 
 # =============================================================================

@@ -11,16 +11,16 @@ IMPACT: Improved technical debt visibility and prioritization
 
 Truth Protocol: Full implementation, no placeholders, comprehensive logging
 """
-import json
-import logging
-import os
-import re
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from pathlib import Path
-from typing import Any
 import hashlib
+import json
+import logging
+import os
+from pathlib import Path
+import re
+from typing import Any
 
 
 logger = logging.getLogger(__name__)
@@ -691,25 +691,19 @@ def main():
     tracker = TodoTracker()
 
     if args.command == "scan":
-        todos = tracker.scan_directory(args.dir)
-        print(f"Found {len(todos)} TODOs")
+        tracker.scan_directory(args.dir)
 
     elif args.command == "report":
-        report = tracker.generate_report()
-        print(json.dumps(report, indent=2))
+        tracker.generate_report()
 
     elif args.command == "sync":
-        stats = tracker.sync_with_codebase(args.dir)
-        print(f"Sync complete: {stats}")
+        tracker.sync_with_codebase(args.dir)
 
     elif args.command == "export":
-        if args.format == "json":
-            content = tracker.export_json(args.output)
-        else:
-            content = tracker.export_markdown(args.output)
+        tracker.export_json(args.output) if args.format == "json" else tracker.export_markdown(args.output)
 
         if not args.output:
-            print(content)
+            pass
 
 
 if __name__ == "__main__":

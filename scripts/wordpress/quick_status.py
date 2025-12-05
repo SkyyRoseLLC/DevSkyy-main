@@ -7,6 +7,7 @@ This is a simplified status checker that doesn't require full DevSkyy dependenci
 """
 
 import os
+import sys
 
 
 # Load .env if it exists
@@ -60,10 +61,7 @@ basic_configured = bool(basic_vars["SKYY_ROSE_SITE_URL"] and basic_vars["SKYY_RO
 for key, value in basic_vars.items():
     if value:
         # Mask sensitive values - never log passwords
-        if "PASSWORD" in key:
-            display_value = "***REDACTED***"
-        else:
-            display_value = value
+        display_value = "***REDACTED***" if "PASSWORD" in key else value
 
         print(f"   ✅ {key}: {display_value}")
     elif "PASSWORD" not in key:
@@ -207,6 +205,6 @@ print("=" * 80)
 
 # Exit code
 if oauth_configured or basic_configured:
-    exit(0)
+    sys.exit(0)
 else:
-    exit(1)
+    sys.exit(1)

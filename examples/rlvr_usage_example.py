@@ -60,7 +60,6 @@ async def simulate_agent_execution(session: AsyncSession) -> uuid.UUID:
     })
     await session.commit()
 
-    print(f"✅ Agent execution recorded: {execution_id}")
     return execution_id
 
 
@@ -86,7 +85,6 @@ async def collect_user_feedback(
         user_id=user_id
     )
 
-    print(f"✅ User feedback recorded: {reward['reward_score']}")
     return reward
 
 
@@ -115,7 +113,6 @@ async def run_automated_tests(
         test_output="2 edge cases failed, but core functionality works"
     )
 
-    print(f"✅ Test results recorded: {tests_passed}/{tests_total} passed, reward: {reward['reward_score']}")
     return reward
 
 
@@ -140,7 +137,6 @@ async def analyze_code_quality(
         security_score=1.0  # 100% - perfect (caught security issue!)
     )
 
-    print(f"✅ Code analysis completed: reward {reward['reward_score']}")
     return reward
 
 
@@ -159,7 +155,6 @@ async def compute_composite_reward(
 
     composite = await verifier.compute_composite_reward(execution_id)
 
-    print(f"✅ Composite reward: {composite} (weighted average of all verifications)")
     return composite
 
 
@@ -179,12 +174,6 @@ async def collect_training_data(session: AsyncSession, agent_id: uuid.UUID):
         days_lookback=30
     )
 
-    print("✅ Training data collected:")
-    print(f"   - Positive examples: {result['positive_examples']}")
-    print(f"   - Negative examples: {result['negative_examples']}")
-    print(f"   - Neutral examples: {result['neutral_examples']}")
-    print(f"   - Total: {result['total_examples']}")
-    print(f"   - Ready for training: {result['ready_for_training']}")
 
     return result
 
@@ -201,13 +190,9 @@ async def check_training_readiness(session: AsyncSession, agent_id: uuid.UUID):
 
     stats = await collector.get_collection_stats(agent_id)
 
-    print("✅ Training statistics:")
-    print(f"   - Total examples: {stats['total_examples']}")
-    print(f"   - Ready: {stats['ready_for_training']}")
 
-    for example_type, type_stats in stats['by_type'].items():
-        print(f"   - {example_type}: {type_stats['count']} examples")
-        print(f"     Avg reward: {type_stats['avg_reward']:.3f}")
+    for _example_type, _type_stats in stats['by_type'].items():
+        pass
 
     return stats
 
@@ -222,7 +207,6 @@ async def start_fine_tuning(session: AsyncSession, agent_id: uuid.UUID):
     """
     orchestrator = FineTuningOrchestrator(session)
 
-    print("🚀 Starting fine-tuning...")
 
     result = await orchestrator.start_fine_tuning(
         agent_id=agent_id,
@@ -234,10 +218,6 @@ async def start_fine_tuning(session: AsyncSession, agent_id: uuid.UUID):
         }
     )
 
-    print("✅ Fine-tuning started:")
-    print(f"   - Provider: {result['provider']}")
-    print(f"   - Job ID: {result.get('job_id', 'N/A')}")
-    print(f"   - Status: {result.get('status', 'running')}")
 
     return result
 
@@ -252,17 +232,12 @@ async def deploy_fine_tuned_agent(session: AsyncSession, run_id: uuid.UUID):
     """
     orchestrator = FineTuningOrchestrator(session)
 
-    print("🚀 Deploying fine-tuned agent...")
 
     result = await orchestrator.deploy_fine_tuned_agent(
         run_id=run_id,
         deploy_to_production=True  # Set to False for staging first
     )
 
-    print("✅ Agent deployed:")
-    print(f"   - Agent ID: {result['agent_id']}")
-    print(f"   - Model ID: {result['model_id']}")
-    print(f"   - Deployed at: {result['deployed_at']}")
 
     return result
 
@@ -280,74 +255,43 @@ async def complete_workflow_example():
     async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
     async with async_session() as session:
-        print("\n" + "="*80)
-        print("RLVR WORKFLOW: COMPLETE EXAMPLE")
-        print("="*80 + "\n")
 
         # Replace with your actual agent ID
         agent_id = uuid.UUID("your-agent-id-here")
         user_id = uuid.UUID("your-user-id-here")
 
         # Step 1: Execute agent
-        print("STEP 1: Agent Execution")
-        print("-" * 40)
         execution_id = await simulate_agent_execution(session)
-        print()
 
         # Step 2: Collect user feedback
-        print("STEP 2: User Feedback")
-        print("-" * 40)
         await collect_user_feedback(session, execution_id, user_id)
-        print()
 
         # Step 3: Run automated tests
-        print("STEP 3: Automated Tests")
-        print("-" * 40)
         await run_automated_tests(session, execution_id)
-        print()
 
         # Step 4: Code quality analysis
-        print("STEP 4: Code Quality Analysis")
-        print("-" * 40)
         await analyze_code_quality(session, execution_id)
-        print()
 
         # Step 5: Composite reward
-        print("STEP 5: Composite Reward")
-        print("-" * 40)
-        composite = await compute_composite_reward(session, execution_id)
-        print()
+        await compute_composite_reward(session, execution_id)
 
         # Step 6: Collect training data (after many executions)
-        print("STEP 6: Collect Training Data")
-        print("-" * 40)
-        training_result = await collect_training_data(session, agent_id)
-        print()
+        await collect_training_data(session, agent_id)
 
         # Step 7: Check if ready for training
-        print("STEP 7: Check Training Readiness")
-        print("-" * 40)
         stats = await check_training_readiness(session, agent_id)
-        print()
 
         if stats['ready_for_training']:
             # Step 8: Start fine-tuning
-            print("STEP 8: Start Fine-Tuning")
-            print("-" * 40)
-            fine_tune_result = await start_fine_tuning(session, agent_id)
-            print()
+            await start_fine_tuning(session, agent_id)
 
             # In production, you'd wait for fine-tuning to complete
             # Then deploy with the run_id
             # run_id = fine_tune_result['run_id']
             # await deploy_fine_tuned_agent(session, run_id)
         else:
-            print("⚠️  Not enough training data yet. Keep collecting feedback!")
-            print(f"   Need: 100 examples, Have: {stats['total_examples']}")
+            pass
 
-        print("\n" + "="*80)
-        print("RLVR WORKFLOW: COMPLETE")
-        print("="*80)
 
 
 # ============================================================================
@@ -358,73 +302,6 @@ def api_usage_example():
     """
     Example API calls for RLVR system.
     """
-    print("""
-# ============================================================================
-# API ENDPOINT USAGE
-# ============================================================================
-
-# 1. Submit User Feedback
-curl -X POST http://localhost:8000/api/v1/rlvr/feedback/user \\
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "execution_id": "550e8400-e29b-41d4-a716-446655440000",
-    "thumbs_up": true,
-    "feedback_text": "Great response!"
-  }'
-
-# 2. Submit Test Results
-curl -X POST http://localhost:8000/api/v1/rlvr/feedback/test-results \\
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "execution_id": "550e8400-e29b-41d4-a716-446655440000",
-    "tests_passed": 8,
-    "tests_total": 10,
-    "test_output": "2 edge cases failed"
-  }'
-
-# 3. Collect Training Data
-curl -X POST http://localhost:8000/api/v1/rlvr/training/collect \\
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "agent_id": "660e8400-e29b-41d4-a716-446655440000",
-    "max_examples": 1000,
-    "days_lookback": 30
-  }'
-
-# 4. Check Training Stats
-curl -X GET http://localhost:8000/api/v1/rlvr/training/stats/660e8400-e29b-41d4-a716-446655440000 \\
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-
-# 5. Start Fine-Tuning
-curl -X POST http://localhost:8000/api/v1/rlvr/fine-tune/start \\
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "agent_id": "660e8400-e29b-41d4-a716-446655440000",
-    "provider": "openai",
-    "base_model": "gpt-3.5-turbo",
-    "epochs": 3
-  }'
-
-# 6. Check Fine-Tuning Status
-curl -X GET http://localhost:8000/api/v1/rlvr/fine-tune/status/770e8400-e29b-41d4-a716-446655440000 \\
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-
-# 7. Deploy Fine-Tuned Agent
-curl -X POST http://localhost:8000/api/v1/rlvr/fine-tune/deploy/770e8400-e29b-41d4-a716-446655440000 \\
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "deploy_to_production": true
-  }'
-
-# 8. Get Agent Analytics
-curl -X GET http://localhost:8000/api/v1/rlvr/analytics/agent/660e8400-e29b-41d4-a716-446655440000?days=30 \\
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-    """)
 
 
 # ============================================================================
@@ -432,9 +309,6 @@ curl -X GET http://localhost:8000/api/v1/rlvr/analytics/agent/660e8400-e29b-41d4
 # ============================================================================
 
 if __name__ == "__main__":
-    print("RLVR System Usage Examples")
-    print("=" * 80)
-    print()
 
     # Show API examples
     api_usage_example()

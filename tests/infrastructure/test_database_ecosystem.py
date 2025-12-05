@@ -1168,7 +1168,7 @@ class TestDatabaseEcosystem:
 
         # Mock the pool to simulate connection failure
         mock_pool = MagicMock()
-        mock_conn = AsyncMock()
+        AsyncMock()
         mock_acquire_context = AsyncMock()
         mock_acquire_context.__aenter__.side_effect = Exception("Connection timeout")
         mock_pool.acquire.return_value = mock_acquire_context

@@ -192,7 +192,7 @@ async def ingest_text(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to ingest text: {e!s}",
-        )
+        ) from e
 
 
 @router.post(
@@ -271,7 +271,7 @@ async def ingest_file(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to ingest file: {e!s}",
-        )
+        ) from e
 
 
 @router.post(
@@ -322,7 +322,7 @@ async def search(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Search failed: {e!s}",
-        )
+        ) from e
 
 
 @router.post(
@@ -376,7 +376,7 @@ async def query(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Query failed: {e!s}",
-        )
+        ) from e
 
 
 @router.get(
@@ -409,7 +409,7 @@ async def get_stats(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get stats: {e!s}",
-        )
+        ) from e
 
 
 @router.delete(
@@ -452,7 +452,7 @@ async def reset_database(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to reset database: {e!s}",
-        )
+        ) from e
 
 
 @router.get(

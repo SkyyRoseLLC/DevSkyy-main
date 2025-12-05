@@ -30,6 +30,8 @@ import pytest
 sys.modules["anthropic"] = MagicMock()
 sys.modules["logfire"] = MagicMock()
 
+import contextlib
+
 from services.mcp_client import (
     MCPToolClient,
     MCPToolError,
@@ -117,10 +119,8 @@ def mock_schema_file():
     yield temp_path
 
     # Cleanup
-    try:
+    with contextlib.suppress(Exception):
         os.unlink(temp_path)
-    except Exception:
-        pass
 
 
 @pytest.fixture
@@ -133,10 +133,8 @@ def mock_invalid_schema_file():
     yield temp_path
 
     # Cleanup
-    try:
+    with contextlib.suppress(Exception):
         os.unlink(temp_path)
-    except Exception:
-        pass
 
 
 @pytest.fixture
@@ -250,8 +248,8 @@ class TestToolLoading:
 
     def test_load_multiple_tools(self, mcp_client):
         """Test loading multiple different tools"""
-        tool1 = mcp_client.load_tool("python_executor", "code_execution")
-        tool2 = mcp_client.load_tool("csv_parser", "data_processing")
+        mcp_client.load_tool("python_executor", "code_execution")
+        mcp_client.load_tool("csv_parser", "data_processing")
 
         assert len(mcp_client.loaded_tools) == 2
         assert "code_execution.python_executor" in mcp_client.loaded_tools
@@ -523,7 +521,7 @@ class TestToolInvocation:
         with patch("services.mcp_client.LOGFIRE_AVAILABLE", True):
             with patch("services.mcp_client.logfire") as mock_logfire:
                 with patch.object(mcp_client.anthropic_client.messages, "create", return_value=mock_response):
-                    result = await mcp_client.invoke_tool(
+                    await mcp_client.invoke_tool(
                         tool_name="python_executor",
                         category="code_execution",
                         inputs={"code": "print('test')"},
@@ -651,7 +649,7 @@ class TestSingletonPattern:
         with patch("services.mcp_client.MCPToolClient.__init__") as mock_init:
             mock_init.return_value = None
 
-            client = get_mcp_client()
+            get_mcp_client()
 
             assert mock_init.called
 

@@ -134,8 +134,8 @@ class TaskRequest:
         if not isinstance(self.task_type, TaskType):
             try:
                 self.task_type = TaskType(self.task_type)
-            except ValueError:
-                raise TaskValidationError(f"Invalid task_type: {self.task_type}")
+            except ValueError as val_err:
+                raise TaskValidationError(f"Invalid task_type: {self.task_type}") from val_err
 
         if not self.description or not self.description.strip():
             raise TaskValidationError("Task description cannot be empty")
@@ -302,7 +302,7 @@ class AgentRouter:
         try:
             self.config_loader.get_enabled_agents()
         except LoaderError as e:
-            raise RoutingError(f"Failed to load agent configs: {e!s}")
+            raise RoutingError(f"Failed to load agent configs: {e!s}") from e
 
         # Batch route all tasks
         results = []

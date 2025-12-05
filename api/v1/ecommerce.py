@@ -148,8 +148,7 @@ def get_importer_service() -> WooCommerceImporterService:
         raise HTTPException(
             status_code=503,
             detail="E-commerce service not configured: Invalid Google credentials",
-        )
-
+        ) from e
     # Optional Telegram configuration
     telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
     telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID")
@@ -249,7 +248,7 @@ async def import_products(
 
     except Exception as e:
         logger.exception("Product import failed")
-        raise HTTPException(status_code=500, detail=f"Import failed: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Import failed: {e!s}") from e
 
 
 @router.post("/generate-seo", response_model=GenerateSEOResponse)
@@ -360,7 +359,7 @@ async def execute_complete_workflow(
         if request.notify_telegram:
             await importer.send_telegram_notification(f"❌ Workflow Failed\n\nError: {e!s}")
 
-        raise HTTPException(status_code=500, detail=f"Workflow failed: {e!s}")
+        raise HTTPException(status_code=500, detail=f"Workflow failed: {e!s}") from e
 
 
 @router.get("/health")

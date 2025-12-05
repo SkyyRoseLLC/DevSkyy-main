@@ -297,7 +297,8 @@ class CacheInvalidationManager:
             await self._immediate_invalidation(patterns)
 
         # Schedule delayed invalidation
-        asyncio.create_task(delayed_task())
+        _task = asyncio.create_task(  # noqa: RUF006 - fire and forget task
+        delayed_task())
 
     async def _scheduled_invalidation(self, rule: InvalidationRule):
         """Scheduled cache invalidation"""

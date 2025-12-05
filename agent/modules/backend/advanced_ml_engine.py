@@ -339,7 +339,7 @@ class AdvancedMLEngine:
             "confidence": 0.88,
         }
 
-    async def _predict_resource_needs(self, resource_data: dict[str, Any]) -> dict[str, Any]:
+    async def _predict_resource_needs(self, _resource_data: dict[str, Any]) -> dict[str, Any]:
         """Predict future resource requirements."""
         return {
             "cpu_requirement": "increase_20_percent",

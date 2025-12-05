@@ -4,13 +4,17 @@ Generate comprehensive coverage visualization graphs.
 Part of the Truth Protocol (Rule #8: Test Coverage ≥90%).
 """
 import json
-import matplotlib.pyplot as plt
+
 import matplotlib
+import matplotlib.pyplot as plt
+
+
 matplotlib.use('Agg')  # Non-interactive backend
-import numpy as np
-from pathlib import Path
-from typing import Dict, List, Tuple
 from collections import defaultdict
+from pathlib import Path
+
+import numpy as np
+
 
 # Configuration
 ARTIFACTS_DIR = Path("/home/user/DevSkyy/artifacts")
@@ -22,13 +26,13 @@ BASELINE_COVERAGE = 10.35  # Before adding tests
 ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def load_coverage_data() -> Dict:
+def load_coverage_data() -> dict:
     """Load coverage data from JSON file."""
     with open(COVERAGE_FILE, 'r') as f:
         return json.load(f)
 
 
-def calculate_module_coverage(data: Dict) -> Dict[str, Dict]:
+def calculate_module_coverage(data: dict) -> dict[str, dict]:
     """Calculate coverage statistics by module."""
     module_stats = defaultdict(lambda: {
         'lines_covered': 0,
@@ -71,7 +75,7 @@ def calculate_module_coverage(data: Dict) -> Dict[str, Dict]:
     return dict(module_stats)
 
 
-def get_file_coverage_list(data: Dict) -> List[Tuple[str, float, int, int]]:
+def get_file_coverage_list(data: dict) -> list[tuple[str, float, int, int]]:
     """Get sorted list of files with coverage stats."""
     file_list = []
     files = data.get('files', {})
@@ -92,7 +96,7 @@ def get_file_coverage_list(data: Dict) -> List[Tuple[str, float, int, int]]:
     return sorted(file_list, key=lambda x: x[1], reverse=True)
 
 
-def graph_1_module_coverage_bar(module_stats: Dict):
+def graph_1_module_coverage_bar(module_stats: dict):
     """Graph 1: Coverage by Module (Bar Chart)."""
     plt.figure(figsize=(14, 8))
 
@@ -101,8 +105,8 @@ def graph_1_module_coverage_bar(module_stats: Dict):
     coverages = [module_stats[m]['coverage'] for m in modules]
 
     # Sort by coverage
-    sorted_data = sorted(zip(modules, coverages), key=lambda x: x[1], reverse=True)
-    modules, coverages = zip(*sorted_data) if sorted_data else ([], [])
+    sorted_data = sorted(zip(modules, coverages, strict=False), key=lambda x: x[1], reverse=True)
+    modules, coverages = zip(*sorted_data, strict=False) if sorted_data else ([], [])
 
     # Create bar chart
     bars = plt.bar(range(len(modules)), coverages, color=['#2ecc71' if c >= TARGET_COVERAGE else '#e74c3c' if c < 50 else '#f39c12' for c in coverages])
@@ -119,7 +123,7 @@ def graph_1_module_coverage_bar(module_stats: Dict):
     plt.legend()
 
     # Add value labels on bars
-    for i, (bar, coverage) in enumerate(zip(bars, coverages)):
+    for _i, (bar, coverage) in enumerate(zip(bars, coverages, strict=False)):
         height = bar.get_height()
         plt.text(bar.get_x() + bar.get_width()/2., height + 1,
                 f'{coverage:.1f}%', ha='center', va='bottom', fontsize=9, fontweight='bold')
@@ -150,7 +154,7 @@ def graph_2_before_after_comparison(current_coverage: float):
     plt.legend()
 
     # Add value labels
-    for bar, value in zip(bars, values):
+    for bar, value in zip(bars, values, strict=False):
         height = bar.get_height()
         plt.text(bar.get_x() + bar.get_width()/2., height + 2,
                 f'{value:.2f}%', ha='center', va='bottom', fontsize=14, fontweight='bold')
@@ -159,7 +163,7 @@ def graph_2_before_after_comparison(current_coverage: float):
     improvement = current_coverage - BASELINE_COVERAGE
     plt.text(0.5, max(values)/2, f'↑ +{improvement:.2f}%\nimprovement',
             ha='center', va='center', fontsize=14, fontweight='bold',
-            bbox=dict(boxstyle='round', facecolor='yellow', alpha=0.7))
+            bbox={'boxstyle': 'round', 'facecolor': 'yellow', 'alpha': 0.7})
 
     plt.tight_layout()
     plt.savefig(ARTIFACTS_DIR / 'coverage_before_after.png', dpi=300, bbox_inches='tight')
@@ -167,7 +171,7 @@ def graph_2_before_after_comparison(current_coverage: float):
     print("✅ Generated: coverage_before_after.png")
 
 
-def graph_3_file_distribution(file_list: List[Tuple[str, float, int, int]]):
+def graph_3_file_distribution(file_list: list[tuple[str, float, int, int]]):
     """Graph 3: File Coverage Distribution (Histogram)."""
     plt.figure(figsize=(12, 6))
 
@@ -190,7 +194,7 @@ def graph_3_file_distribution(file_list: List[Tuple[str, float, int, int]]):
     plt.grid(axis='y', alpha=0.3, linestyle='--')
 
     # Add value labels
-    for bar, count in zip(bars, hist):
+    for bar, count in zip(bars, hist, strict=False):
         height = bar.get_height()
         if height > 0:
             plt.text(bar.get_x() + bar.get_width()/2., height + 0.5,
@@ -202,7 +206,7 @@ def graph_3_file_distribution(file_list: List[Tuple[str, float, int, int]]):
     print("✅ Generated: coverage_distribution.png")
 
 
-def graph_4_top_performers(file_list: List[Tuple[str, float, int, int]]):
+def graph_4_top_performers(file_list: list[tuple[str, float, int, int]]):
     """Graph 4: Top 10 Files with Best Coverage."""
     plt.figure(figsize=(14, 8))
 
@@ -229,7 +233,7 @@ def graph_4_top_performers(file_list: List[Tuple[str, float, int, int]]):
     plt.grid(axis='x', alpha=0.3, linestyle='--')
 
     # Add value labels
-    for i, (bar, coverage) in enumerate(zip(bars, coverages)):
+    for _i, (bar, coverage) in enumerate(zip(bars, coverages, strict=False)):
         width = bar.get_width()
         plt.text(width + 1, bar.get_y() + bar.get_height()/2.,
                 f'{coverage:.1f}%', ha='left', va='center', fontsize=10, fontweight='bold')
@@ -240,7 +244,7 @@ def graph_4_top_performers(file_list: List[Tuple[str, float, int, int]]):
     print("✅ Generated: top_covered_files.png")
 
 
-def graph_5_coverage_gaps(file_list: List[Tuple[str, float, int, int]]):
+def graph_5_coverage_gaps(file_list: list[tuple[str, float, int, int]]):
     """Graph 5: Top 10 Files Needing Most Improvement."""
     plt.figure(figsize=(14, 8))
 
@@ -270,7 +274,7 @@ def graph_5_coverage_gaps(file_list: List[Tuple[str, float, int, int]]):
     plt.grid(axis='x', alpha=0.3, linestyle='--')
 
     # Add value labels with lines needed
-    for i, (bar, coverage, cov, tot) in enumerate(zip(bars, coverages, covered, total)):
+    for _i, (bar, coverage, cov, tot) in enumerate(zip(bars, coverages, covered, total, strict=False)):
         width = bar.get_width()
         lines_needed = tot - cov
         plt.text(width + 1, bar.get_y() + bar.get_height()/2.,
@@ -283,7 +287,7 @@ def graph_5_coverage_gaps(file_list: List[Tuple[str, float, int, int]]):
     print("✅ Generated: coverage_gaps.png")
 
 
-def graph_6_module_heatmap(module_stats: Dict):
+def graph_6_module_heatmap(module_stats: dict):
     """Graph 6: Module Coverage Heatmap."""
     plt.figure(figsize=(14, 8))
 
@@ -322,7 +326,7 @@ def graph_6_module_heatmap(module_stats: Dict):
     plt.grid(axis='x', alpha=0.3, linestyle='--')
 
     # Add value labels
-    for i, (bar, coverage, files) in enumerate(zip(bars, coverages, files_count)):
+    for _i, (bar, coverage, files) in enumerate(zip(bars, coverages, files_count, strict=False)):
         width = bar.get_width()
         plt.text(width + 1, bar.get_y() + bar.get_height()/2.,
                 f'{coverage:.1f}% ({files} files)', ha='left', va='center',
@@ -388,7 +392,7 @@ def graph_7_test_type_distribution():
     colors = ['#3498db', '#2ecc71', '#9b59b6', '#e74c3c', '#f39c12', '#95a5a6']
 
     # Create pie chart
-    _, texts, autotexts = plt.pie(sizes, labels=labels, colors=colors[:len(labels)],
+    _, _texts, _autotexts = plt.pie(sizes, labels=labels, colors=colors[:len(labels)],
                                         autopct='%1.1f%%', startangle=90,
                                         explode=[0.05] * len(labels),
                                         textprops={'fontsize': 11, 'fontweight': 'bold'})
@@ -396,7 +400,7 @@ def graph_7_test_type_distribution():
     plt.title('Test Distribution by Type', fontsize=16, fontweight='bold', pad=20)
 
     # Add count in legend
-    legend_labels = [f'{label}: {count} files' for label, count in zip(labels, sizes)]
+    legend_labels = [f'{label}: {count} files' for label, count in zip(labels, sizes, strict=False)]
     plt.legend(legend_labels, loc='upper left', bbox_to_anchor=(1, 1))
 
     plt.tight_layout()
@@ -449,10 +453,10 @@ def graph_8_coverage_trend():
     plt.legend()
 
     # Add value labels
-    for i, (x, y) in enumerate(zip(x_pos, coverages)):
+    for _i, (x, y) in enumerate(zip(x_pos, coverages, strict=False)):
         plt.text(x, y + 3, f'{y:.1f}%', ha='center', va='bottom',
                 fontsize=11, fontweight='bold',
-                bbox=dict(boxstyle='round', facecolor='yellow', alpha=0.7))
+                bbox={'boxstyle': 'round', 'facecolor': 'yellow', 'alpha': 0.7})
 
     plt.tight_layout()
     plt.savefig(ARTIFACTS_DIR / 'coverage_trend.png', dpi=300, bbox_inches='tight')

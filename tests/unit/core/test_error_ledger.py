@@ -13,8 +13,6 @@ Truth Protocol Compliance:
 import json
 import os
 import tempfile
-from datetime import datetime
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -560,17 +558,16 @@ class TestGlobalFunctions:
 
     def test_log_error_global_function(self):
         """Test global log_error function."""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            with patch("core.error_ledger._error_ledger", None):
-                with patch("core.error_ledger.ErrorLedger") as MockLedger:
-                    mock_instance = MagicMock()
-                    mock_instance.log_error.return_value = "error-123"
-                    MockLedger.return_value = mock_instance
+        with tempfile.TemporaryDirectory(), patch("core.error_ledger._error_ledger", None):
+            with patch("core.error_ledger.ErrorLedger") as MockLedger:
+                mock_instance = MagicMock()
+                mock_instance.log_error.return_value = "error-123"
+                MockLedger.return_value = mock_instance
 
-                    error = ValueError("Global test")
-                    result = log_error(error, severity=ErrorSeverity.HIGH)
+                error = ValueError("Global test")
+                log_error(error, severity=ErrorSeverity.HIGH)
 
-                    mock_instance.log_error.assert_called()
+                mock_instance.log_error.assert_called()
 
 
 # =============================================================================

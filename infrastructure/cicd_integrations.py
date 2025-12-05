@@ -236,7 +236,7 @@ class CICDIntegrationManager:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Webhook processing failed: {e!s}",
-            )
+            ) from e
 
     async def _verify_webhook_signature(
         self,

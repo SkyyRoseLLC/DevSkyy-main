@@ -7,35 +7,30 @@ IMPACT: Ensures enterprise-grade authentication security
 
 Truth Protocol: Comprehensive coverage, no placeholders, security-focused testing
 """
-import json
-import os
 from datetime import datetime, timedelta
+import os
 from unittest.mock import AsyncMock, MagicMock, patch
 
-import pytest
 from fastapi import HTTPException
 from jose import jwt
+import pytest
 
 
 # Skip tests if auth0 module is not available
 pytest.importorskip("security.auth0_integration")
 
 from security.auth0_integration import (
-    AUTH0_ALGORITHMS,
     AUTH0_AUDIENCE,
     AUTH0_DOMAIN,
     Auth0Client,
-    Auth0OAuth2Client,
     Auth0User,
     TokenPayload,
-    auth0_client,
     auth0_health_check,
     auth0_oauth_client,
     create_devskyy_jwt_token,
     create_devskyy_refresh_token,
     get_auth0_login_url,
     get_current_admin_user,
-    get_current_user,
     log_auth_event,
     require_permissions,
     require_scope,

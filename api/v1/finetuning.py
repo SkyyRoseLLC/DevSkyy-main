@@ -205,7 +205,7 @@ async def collect_performance_snapshot(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to collect snapshot: {e!s}"
-        )
+        ) from e
 
 
 @router.post(
@@ -250,13 +250,13 @@ async def prepare_dataset(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
-        )
+        ) from e
     except Exception as e:
         logger.error(f"Failed to prepare dataset: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to prepare dataset: {e!s}"
-        )
+        ) from e
 
 
 @router.post(
@@ -323,13 +323,13 @@ async def create_finetuning_job(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
-        )
+        ) from e
     except Exception as e:
         logger.error(f"Failed to create finetuning job: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to create job: {e!s}"
-        )
+        ) from e
 
 
 @router.get(
@@ -468,7 +468,7 @@ async def optimize_tool_selection(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to optimize: {e!s}"
-        )
+        ) from e
 
 
 @router.post(
@@ -487,7 +487,7 @@ async def execute_parallel_calls(
     Supports concurrent execution with error handling.
     """
     try:
-        manager = get_optimization_manager()
+        _manager = get_optimization_manager()
 
         # This would integrate with actual function registry
         # For now, return structure
@@ -516,7 +516,7 @@ async def execute_parallel_calls(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to execute: {e!s}"
-        )
+        ) from e
 
 
 @router.get(

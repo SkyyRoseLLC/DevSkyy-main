@@ -102,7 +102,7 @@ async def auth0_login(
 
     except Exception as e:
         logger.error(f"Auth0 login initiation failed: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to initiate Auth0 login")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to initiate Auth0 login") from e
 
 
 @router.get("/callback", response_model=Auth0TokenResponse)
@@ -177,7 +177,7 @@ async def auth0_callback(
         await log_auth_event(event_type="auth0_callback_error", request=request, details={"error": str(e)})
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to process Auth0 callback"
-        )
+        ) from e
 
 
 @router.post("/logout", response_model=Auth0LogoutResponse)
@@ -214,7 +214,7 @@ async def auth0_logout(
 
     except Exception as e:
         logger.error(f"Auth0 logout failed: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to process logout")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to process logout") from e
 
 
 # ============================================================================
@@ -256,7 +256,7 @@ async def get_current_auth0_user(request: Request):
         raise
     except Exception as e:
         logger.error(f"Failed to get user info: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to get user information")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to get user information") from e
 
 
 # ============================================================================

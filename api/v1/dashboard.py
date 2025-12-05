@@ -1,24 +1,3 @@
-from monitoring.system_monitor import SystemMonitor
-from security.jwt_auth import UserRole, get_current_user, require_authenticated
-
-
-# Security availability check
-try:
-    from security.jwt_auth import UserRole, require_authenticated
-
-    SECURITY_AVAILABLE = True
-except ImportError:
-    SECURITY_AVAILABLE = False
-import asyncio
-from datetime import datetime, timedelta
-from typing import Any
-
-from fastapi import APIRouter, Depends, HTTPException, Request, status
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
-from pydantic import BaseModel, Field
-
-
 """
 DevSkyy Enterprise Dashboard API v1.0.0
 
@@ -30,11 +9,41 @@ Version: 1.0.0
 Python: >=3.11
 """
 
+import asyncio
+from datetime import datetime, timedelta
+from typing import Any
+
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel, Field
+
+
+# Security module imports with graceful degradation
+try:
+    from security.jwt_auth import get_current_user, require_authenticated
+
+    SECURITY_AVAILABLE = True
+except ImportError:
+    SECURITY_AVAILABLE = False
+
+    def get_current_user():
+        """Fallback when security module unavailable."""
+        return None
+
+    def require_authenticated():
+        """Fallback when security module unavailable."""
+        return None
+
+
 # Import enterprise modules with graceful degradation
 try:
+    from monitoring.system_monitor import SystemMonitor
+
     ENTERPRISE_MODULES_AVAILABLE = True
 except ImportError:
     ENTERPRISE_MODULES_AVAILABLE = False
+    SystemMonitor = None  # type: ignore[misc,assignment]
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -337,7 +346,7 @@ async def get_dashboard_data(
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to retrieve dashboard data: {e!s}"
-        )
+        ) from e
 
 
 @router.get("/dashboard/metrics", response_model=SystemMetricsModel)
