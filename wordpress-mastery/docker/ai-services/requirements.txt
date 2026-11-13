@@ -21,7 +21,7 @@ imageio==2.36.1  # Updated from 2.31.1
 scikit-image==0.24.0  # Updated from 0.21.0
 
 # Natural Language Processing (updated to match main requirements)
-nltk==3.9.1  # Updated from 3.8.1
+nltk==3.10.4  # Updated from 3.8.1
 textblob==0.18.0.post0  # Updated from 0.17.1
 spacy==3.8.3  # Updated from 3.6.1
 
