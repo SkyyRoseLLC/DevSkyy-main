@@ -52,5 +52,5 @@ PyJWT==2.10.1  # Updated from 2.8.0
 # Development (updated to match main requirements)
 pytest==8.4.2  # Updated from 7.4.0
 pytest-cov==6.0.0  # Updated from 4.1.0
-black==24.10.0  # Updated from 23.7.0
+black==26.10.1  # Updated from 23.7.0
 flake8==7.1.1  # Updated from 6.0.0
