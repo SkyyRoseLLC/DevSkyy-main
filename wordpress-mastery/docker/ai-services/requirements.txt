@@ -5,7 +5,7 @@
 # Web Framework (updated to match main requirements)
 Flask==3.1.2  # Updated from 2.3.3
 gunicorn==23.0.0  # Updated from 21.2.0
-flask-cors==5.0.0  # Updated from 4.0.0
+flask-cors==6.0.0  # Updated from 4.0.0
 
 # AI/ML Libraries (updated to match main requirements)
 # Note: tensorflow disabled in main requirements due to compatibility issues
