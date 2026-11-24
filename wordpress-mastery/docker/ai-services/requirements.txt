@@ -36,7 +36,7 @@ celery==5.4.0  # Updated from 5.3.1
 sqlalchemy==2.0.36  # Updated from 2.0.19
 
 # Utilities (updated to match main requirements)
-python-dotenv==1.0.1  # Updated from 1.0.0
+python-dotenv==1.2.2  # Updated from 1.0.0
 pyyaml==6.0.2  # Updated from 6.0.1
 jsonschema==4.23.0  # Updated from 4.19.0
 marshmallow==3.23.2  # Updated from 3.20.1
