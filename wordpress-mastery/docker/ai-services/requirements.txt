@@ -30,7 +30,7 @@ torch>=2.8.0,<2.9.0  # CVE-2025-3730 security fix
 torchvision>=0.23.0,<0.24.0  # Compatible with torch 2.8.x
 
 # API and Data Processing (updated to match main requirements)
-requests==2.32.4  # Updated from 2.31.0
+requests==2.33.0  # Updated from 2.31.0
 redis==5.2.1  # Updated from 4.6.0
 celery==5.4.0  # Updated from 5.3.1
 sqlalchemy==2.0.36  # Updated from 2.0.19
